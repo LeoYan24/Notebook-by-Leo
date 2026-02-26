@@ -22,7 +22,7 @@
 \usetikzlibrary{shapes,arrows,positioning,calc}
 \usepackage{graphicx}
 \usepackage{grffile}
-%\graphicspath{{D:/code_clone/Math_behind_Signal_and_System/Figures}}
+\graphicspath{{D:/Repository/Notebook_by_Leo_Yan/Figures/}}
 \let\cleardoublepage\clearpage
 \usepackage{url}
 
@@ -305,14 +305,19 @@
 
 \chapter{渐进均分性}
 
+\section{渐进均分性}
+
 \begin{definition}[随机变量的收敛]
     给定随机变量序列$\{X_n\}$和随机变量X，
 
-    \ding{172}如果$\forall \epsilon >0,P\{|X_n - X| \geq \epsilon\} \to 0(n\to \infty)$，则称$X_n$依概率收敛于X，记为$X_n \xrightarrow{P} X$
+    \ding{172}如果$$\forall \epsilon >0,P\{|X_n - X| \geq \epsilon\} \to 0(n\to \infty)$$
+    则称$X_n$依概率收敛于X，记为$X_n \xrightarrow{P} X$
 
-    \ding{173}如果$P\{\lim_{n\to \infty} X_n = X\} = 1$，则称$X_n$几乎处处收敛（或以概率1收敛）于X，记为$X_n \xrightarrow{a.e.} X$
+    \ding{173}如果$$P\{\lim_{n\to \infty} X_n = X\} = 1$$
+    则称$X_n$几乎处处收敛（或以概率1收敛）于X，记为$X_n \xrightarrow{a.e.} X$
 
-    \ding{174}如果$\mathbb{E} (X_n-X)^2 \to 0(n\to \infty)$，则称$X_n$均方收敛于X，记为$X_n \xrightarrow{L_2} X$
+    \ding{174}如果$$\mathbb{E} (X_n-X)^2 \to 0(n\to \infty)$$
+    则称$X_n$均方收敛于X，记为$X_n \xrightarrow{L_2} X$
 \end{definition}
 
 \begin{theorem}[渐进均分性(Asymptotic Equipartition Property, AEP)]
@@ -524,16 +529,128 @@
     (1)按输入输出信号在幅值和时间上的取值分为离散信道（数字信道）、连续信道等\\
     离散信道(discrete channel)是至多可数的输入字母表$\mathcal{X}$和输出字母表$\mathcal{Y}$，及$\mathcal{X} $到$\mathcal{Y} $的转移概率模型构成的系统
 
-    (2)如果信道输出值域信道在该时刻的输入有关，二与先前的输入输出等无关，则信道是无记忆信道(memoryless channel)；否则为有记忆信道\\
-    离散无记忆信道的转移概率模型可以用转移概率分布$p(y|x)$描述
+    (2)如果信道输出值域信道在该时刻的输入有关，二与先前的输入输出等无关，则信道是无记忆信道(memoryless channel)；否则为有记忆信道
 
     (3)按输入输出信号之间的关系是否确定，分为有噪信道和无噪信道等
+\end{definition}
+
+\begin{definition}[离散无记忆信道]
+    离散无记忆信道(DMC)的转移概率模型可以用转移概率分布$p(y|x)$描述。
+    
+    设输入字母表为$\mathcal{X} $，输出字母表为$\mathcal{Y} $，该DMC可以用$$(\mathcal{X} ,p(x|y),\mathcal{Y} )$$表示
+    
+    离散无记忆信道的n次扩展可以用$$(\mathcal{X} ^n,p(x^n|y^n),\mathcal{Y} ^n)$$表示，其中
+    \[p(y_k|x^k,y^{k-1})=p(y_k|x_k),\forall k\in\{1,2,\cdots,n\}\]
+
+    进一步，如果信道不带反馈（如不明确指出，则默认不带反馈），即输入字符不依赖于过去的输出字符，即
+    $$p(x_k|x^{k-1},y^{k-1})=p(x_k|x^{k-1}),\forall k$$
+    则n次扩展的信道转移函数简化为
+    \[p(y^k|x^k)=\prod_{i=1}^k p(y_i|x_i),\forall k\]
 \end{definition}
 
 \begin{definition}[信息信道容量]
     离散无记忆信道的信息信道容量(information channel capacity)定义为
     \[C = \max_{p(x)} I(X;Y)\]
 \end{definition}
-香农第二定理将指出信息信道容量=信道容量=信道最高码率。
+香农第二定理将指出信息信道容量=信道容量=信道最高码率=任意小误差传输比特数/信道使用次数。
+
+$I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大值存在且唯一，使用$\max$是合理的。
+
+\begin{proposition}[信息信道容量的性质]
+    \quad
+    \begin{itemize}
+        \item $C\geq 0$，取等$\iff$信道输出与输入独立
+        \item $C\leq \log |\mathcal{X}|$，取等$\iff X,Y$独立且$X\sim U_{\mathcal{X} }$
+        \item $C\leq \log |\mathcal{Y}|$，取等$\iff$存在输入分布使得输出分布为均匀分布
+    \end{itemize}
+\end{proposition}
+
+\begin{definition}[对称信道]
+    如果离散无记忆信道的概率转移矩阵$p(x|y)$是数独矩阵，则称该信道为对称信道(symmetric channel)。数独矩阵必然是双随机的。
+
+    数独矩阵可以描述为：任何两行互为置换、任何两列也互为置换。
+    
+    如果每一行$p(\cdot|x)$都是同一分布的置换，且所有列的元素和$\sum_{x}p(y|x)$相同，则该信道是弱对称信道(weakly symmetric channel)
+\end{definition}
+
+\begin{theorem}
+    对于弱对称信道，信息信道容量为
+    \[C = \log |\mathcal{Y}| - H(p(\cdot|x))\]
+    其中$p(\cdot|x)$为任一行的分布。取等$\iff$输入分布为均匀分布
+\end{theorem}
+
+\begin{example}[有噪打字机信道]
+    该种信道的概率转移矩阵矩阵的基本特征是，对角线元素（不出错的概率）接近于1，除了对角线，每一行都有个别元素数值较大，而其他元素极小或为0。描述了考虑失误的打字机。
+
+    输入、输出字母表相同，输入以0.5的概率被输出端无改变地接收，以0.5的概率变为下一个字母。字母表大小为26时，$C=13 bit/$传输：
+
+    一方面，每次传输可以无误差地传输其中13个字符（仅传输奇数位置或偶数位置的字符）；
+
+    另一方面，$$C=\max I(X;Y)=\max [H(Y)-H(Y|X)]=\max H(Y)-1=\log 26-1=\log 13 bit/\text{传输}$$
+
+    取等$\iff p(x)\sim U$
+\end{example}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{communicatioin_channel.jpg}
+    \caption{离散通信信道模型}
+\end{figure}
+
+\begin{definition}[$(M,n)$码]
+    信道$(\mathcal{X} ,p(y|x),\mathcal{Y} )$的$(M,n)$码由以下部分构成：\begin{itemize}
+        \item 指标集$\{1,2,\cdots,M\}$
+        \item 编码函数(encoding function)
+        $$x^n:\{1,2,\cdots,M\}\to \mathcal{X} ^n$$
+        生成码字(codewords)$x^n(1),x^n(2),\cdots,x^n(M)$，所有码字的集合称为码本(code-book)$$\mathcal{C}=\{x^n(1),x^n(2),\cdots,x^n(M)\}=\{\mathbf{x}_1,\mathbf{x}_2,\cdots,\mathbf{x}_M\}$$
+        \item 译码函数
+        $$g:\mathcal{Y} ^n\to\{1,2,\cdots,M\}$$
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[条件误差概率]
+    已知指标$i$被发送，（给定发送符号时的）条件误差概率(conditional probability of error)为
+    \[\lambda_i=P\{g(Y^n)\neq i|X^n=x^n(i)\}\]
+    它衡量了特定符号在传输过程中的脆弱性或抗干扰能力。
+
+    已知接收到符号y，（给定接收符号时的）条件误差概率为
+    \[1-\max_{x}P\{X=x|Y=y\}\]
+    反映了收到特定y后，接收端对这次判决的不确定性。条件误差概率通常指前者。
+\end{definition}
+
+\begin{definition}
+    $(M,n)$码的最大误差概率(maximun probability of error)为
+    \[\lambda^{(n)}=\max_{i\in\{1,2,\cdots,M\}} \lambda_i\]
+
+    （算数）平均误差概率(average probability of error)为
+    \[P^{(n)}_e=\overline{\lambda}=\frac{1}{M}\sum_{i=1}^{M}\lambda_i\]
+\end{definition}
+
+\begin{remark}
+    如果指标W的选取服从均匀分布，则$P^{(n)}_e=P\{W\neq g(Y^n)\}$。
+\end{remark}
+\begin{remark}
+    显然，$P_e^{(n)}\leq \lambda^{(n)}$。通常希望这二者差异大，但将证明：在相同码率下，平均误差概率小$\implies$最大误差概率小
+\end{remark}
+
+\begin{definition}[码率]
+    $(M,n)$码的码率(rate)为
+    \[R=\frac{\log M}{n}(bit/\text{传输})\]
+    如果存在一个$(\lceil 2^{nR}\rceil,n)$码，满足$\lambda^{(n)}\to 0,n\to 0$，则称码率R是可达的(achievable)。一般将此编码简记为$(2^{nR},n)$。
+
+    信道容量定义为可达码率的上确界。
+\end{definition}
+
+\begin{definition}[联合典型序列]
+    服从分布$p(x,y)$的联合典型序列(jointly typical sequence)$\{(x^n,y^n)\}$所构成的集合$A^{(n)}_{\epsilon}$是指其经验熵与真实熵以$\epsilon$为界靠近的n长序列构成的集合，即：
+    \begin{align*}
+        A^{(n)}_{\epsilon}=\left\{(x^n,y^n)\in \mathcal{X}^n\times \mathcal{Y}^n:\right.
+        &\left|-\frac{1}{n}\log p(x^n)-H(X)\right|<\epsilon,\\
+        &\left|-\frac{1}{n}\log p(y^n)-H(Y)\right|<\epsilon,\\
+        &\left.\left|-\frac{1}{n}\log p(x^n,y^n)-H(X,Y)\right|<\epsilon\right\}
+    \end{align*}
+    其中
+    \[p(x^n,y^n)=\prod_{i=1}^{n}p(x_i,y_i)\]
+\end{definition}
 
 \end{document}
