@@ -511,7 +511,323 @@
 
 \section{编码理论}
 
+\begin{definition}{字母表}
+    设X是取值空间为$\mathcal{X} $的随机变量，$\Sigma$为D元字母表(alphabet)，$\Sigma^*$表示$\Sigma$上有限长字符串构成的集合。
+
+    总假设D元字母表为$\{0,1,\cdots,D-1\}$。
+\end{definition}
+
+\begin{definition}[信源编码]
+    信源编码(source code)为映射$C:\mathcal{X} \to \Sigma^*$。
+
+    x的码字(codeword)记为$C(x)$，其长度记为$l(x)$
+
+    若C是单射，称该编码是非奇异的(nonsingular)。
+\end{definition}
+
+\begin{definition}[期望长度]
+    设$X\sim p(x)$，信源编码$C$的期望长度(expected length)为
+    \[L(C)=\mathbb{E} _pl(X)=\sum_{x\in\mathcal{X} }p(x)l(x)\]
+\end{definition}
+
+\begin{definition}[前缀码]
+    C是前缀码(prefix code)或即时码(instantaneous code)，如果在序列中任一字符$x_i$的码字结束时，可以不依赖于后续码字而立即确定$x_i$。
+
+    等价定义：没有任何码字是其他码字的前缀，即
+    \[\forall c_1,c_2\in C,c_1\neq c_2,!\exists s\in \Sigma^*,c_1\cdot s=c_2\]
+\end{definition}
+
+\begin{theorem}[Kraft不等式]
+    D元字母表上的即时码，码字长度$l_1,\cdots,l_m$满足
+    \[\sum_{i=1}^{m}D^{-l_i}\leq 1\]
+
+    给定一组满足上述不等式的码字长度，比存在相应的即时码。
+\end{theorem}
+\begin{proof}
+    考虑D叉树，第k层为长为k的字符串，树枝表述字符。
+
+    前缀条件表明，\textbf{没有码字是其他码字的祖先，即码字必然对应叶子}.
+
+    令$l_{\max}=\max\{l_i\}$，考虑$l_{\max}$层中码字节点及其后代数M：
+
+    一方面，$M\leq D^{l_{\max}}$；
+
+    另一方面，位于$l_i$层的码字在$l_{\max}$层恰有$D^{l_{\max}-l_i}$个后代，且这些后代胡补充和，因此
+    $$M=\sum_{i}D^{l_{\max}-l_i}$$
+
+    综上，$\sum_{i=1}^{m}D^{-l_i}\leq 1$.
+
+    反之，依字典序将第一个深度为$l_1$的节点标为码字1并去除其后代。依次对$l_i$重复以上步骤。不等式保证直至最后一步，必然存在所需层的节点。
+\end{proof}
+
+\begin{theorem}[推广的Kraft不等式]
+    任意可数的即时码字集，码字长度$\{l_i\}_{i=1}^{\infty}$满足
+    \[\sum_{i=1}^{\infty}D^{-l_i}\leq 1\]
+
+    反之也有相应即时码。
+\end{theorem}
+\begin{proof}
+    以D进制小数
+    \[0.y_1 y_2 \cdots y_{l_i}=\sum_{j=1}^{l_i}y_j D^{-j}\]
+    表示码字，则在区间
+    \[[0.y_1\cdots y_{l_i},0.y_1\cdots y_{l_i}+D^{-l_i})\]
+    没有其他码字。区间长度之和$\leq 1$即Kraft不等式。反之构造同上。
+\end{proof}
+
+\begin{definition}[D进制概率分布]
+    如果概率质量函数$p$的每个概率值形如$D^{-n},n\in\mathbb{N}$，则称p是D进制的(D-adic)
+\end{definition}
+
+使用D元字母表，信源编码的期望长度不小于以D为底的信源分布的熵：
+
+\begin{theorem}[期望长度的估计]
+    设信源分布为$p(x_i)=p_i$，对随机变量X的任一D元即时码C，令$d=\sum D^{-l_i}\leq1$，D进制分布$q_i=D^{-l_i}/d$，则
+
+    (1)\[L(C)=H_D(X)+D(p\|q)-\log_D c\geq H_D(X)\]
+    取等时必须满足：分配最优码长$l_i^*=-\log_D p_i\in\mathbb{N} ^*$.
+
+    (2)$-\log_D p_i\in\mathbb{N} ^*$的必要条件是$p$是D进制分布，此时p=q.
+\end{theorem}
+\begin{proof}
+    \begin{align*}
+        L(C)-H_D(X)&=\sum p_i l_i-\sum p_i \log_D\frac{1}{p_i}\\
+        &=\sum p_i \log_D p_iD^{-l_i}\\
+        &=\sum p_i \log_D \frac{p_i}{q_i}\cdot\frac{1}{c}\\
+        &=\sum p_i\log_D\frac{p_i}{q_i}-\log_D c\\
+        &=D(p\|q)-\log_D c\geq 0&(\text{相对熵非负})
+    \end{align*}
+
+    下面说明$q_i$及最优码长的由来，即最优化问题：
+    
+    在$l_i\in\mathbb{N} ,\sum D^{-l_i}\leq 1$的条件下，求$\min L(C)$.
+
+    不考虑$l_i\in\mathbb{N}$.$\Omega=\{\mathbf{x}\in\mathbb{R}^m:\sum D^{-l_i}\leq 1\}$是凸集，因为$\forall \mathbf{x},\mathbf{y}\in\Omega$，由H$\ddot{o}$lder不等式，
+    \[sum_i D^{-\lambda x_i-(1-\lambda)y_i}\leq \left(\sum_i D^{-x_i}\right)^{\lambda}\left(\sum_i D^{-y_i}\right)^{1-\lambda}\leq 1,\forall 0<\lambda<1\]
+
+    用拉乘法求$\min_{\mathbf{x}\in\Omega}L(C)$.令
+    \[J(l_1,\cdots,l_m,\lambda)=\sum_i p_i l_i+\lambda\left(\sum_i D^{-l_i}-1\right)\]
+    再令
+    \[\frac{\partial J}{\partial l_i}=p_i-\lambda D^{-l_i}\log D=0\]
+    得
+    \[D^{-l_i}=\frac{p_i}{\lambda\log D}\]
+    代回条件$\mathbf{x}\in\partial \Omega$得$\lambda=1/\log D$，从而最优码长为
+    \[l^*_i=-\log_D p_i\]
+\end{proof}
+
+以上过程提供了\textbf{寻找最优编码}（在$D(p||q)$最小的意义下）的流程：寻找最接近$X\sim p$的D进制分布q，按q选取码字长度，再用Kraft不等式证明中的方法构造编码。按此流程构造的编码是香农码：
+
+\begin{definition}[香农码]
+    满足$l_i=-\log_D p_i$的编码称为香农码。
+\end{definition}
+
+以下定理从期望长度的角度阐释了香农码的有效性：
+\begin{theorem}
+    设$\{l_i^*\}_{i=1}^{m}$是关于信源分布p和D元字母表的最优码长，$L^*=\sum p_i l_i^*$为期望长度，则
+    \[H_D(X)\leq L^* <H_D(X)+1\]
+\end{theorem}
+\begin{proof}
+    令
+    $$l_i=\left\lceil \log_D\frac{1}{p_i}\right\rceil\in\left[\log_D\frac{1}{p_i},\log\frac{1}{p_i}+1\right)$$
+    它满足Kraft不等式：
+    \[\sum D^{l_i}\leq\sum D^{-\log\frac{1}{p_i}}=1\]
+    这样就构造出在所需区间中的期望长度。
+\end{proof}
+
+下面总令D=2。
+
+通过对字符进行\textbf{分组编码}，可以减少每字符的附加位，从而降低L:
+
+\begin{theorem}
+    考虑将$\mathbf{x}=(x_1,\cdots,x_n)$视为$\mathcal{X} ^n$中的超字符，$l(\mathbf{x})$为$\mathbf{x}$的码字长度，则每输入字符的最小期望码字长度满足
+    \[\frac{1}{n}H(\mathbf{X})\leq L_n^*<\frac{1}{n}H(\mathbf{X})+\frac{1}{n}\]
+
+    进一步，若$\{X_j\}$是平稳过程，则
+    \[\lim_{n\to\infty}L^*_n=H(\mathcal{X} )\]
+\end{theorem}
+\begin{proof}
+    \[L_n=\frac{1}{n}\sum p(\mathbf{x})l(\mathbf{x})=\frac{1}{n}\mathbb{E} l(\mathbf{X})\]
+
+    按
+    \[l(\mathbf{x}_i)=\left\lceil\log\frac{1}{p(\mathbf{x}_i)}\right\rceil\]
+    分配码长，则构造出所需区间中的$L_n$。后一命题得自夹逼定理。
+\end{proof}
+
+以下定理估计了考虑偏码(wrong code)时的期望码长:
+\begin{theorem}
+    如果非真实分布q是对真实分布p的最佳估计，则在码长分配
+    $$l(x)=\left\lceil\log\dfrac{1}{q(x)}\right\rceil$$
+    下，关于p(x)的期望长度满足：
+    \[H(p)+D(p||q)\leq\mathbb{E}_p l(X)<H(p)+D(p||q)+1\]
+\end{theorem}
+\begin{proof}
+    \[l(x)\in\left[\log\frac{1}{q(x)},\log\frac{1}{q(x)}+1\right)\]
+    类似thm4.1.4.带入即证。
+\end{proof}
+
+以下定理表明，仅仅要求编码唯一可译，而不要求即时性，也无法找到更小码长：
+\begin{theorem}[McMillan定理]
+    任一唯一可译的D元码也满足Kraft不等式$\sum D^{l_i}\leq 1$；
+    
+    反之，给定一组码字长度$\{l_i\}$满足$\sum D^{l_i}\leq 1$，必有对应的唯一可译码。
+\end{theorem}
+\begin{proof}
+    $\forall k\in\mathbb{N} ^*$，考虑C的k次扩展，有
+    \[l(x_!,\cdots,x_k)=\sum_{i=1}^k l(x_i)\]
+    注意到恒等式
+    \[\left(\sum_{x\in\mathcal{X}}D^{-l(x)}\right)^k=\sum_{x^k\in\mathcal{X}^k}D^{-l(x_1)}\cdots D^{-l(x_k)}=\sum_{x^k\in\mathcal{X}^k}D^{-l(\mathbf{x})}\]
+
+    按码字长度合并同类项：
+    \[\sum_{x^k\in\mathcal{X}^k}D^{-l(\mathbf{x})}=\sum_{m=1}^{kl_{\max}}a_m D^{-m}\]
+
+    唯一可译性要求$a_m\leq D^m$，于是
+    \[\sum_{m=1}^{kl_{\max}}a_m D^{-m}\leq k l_{\max}\]
+    即
+    \[\sum D^{-l_j}\leq(k l_{\max})^{1/k}\]
+    令$k\to\infty$即得。
+\end{proof}
+\begin{corollary}
+    无限信源字母表$\mathcal{X}$的唯一可译码满足Kraft不等式。
+\end{corollary}
+\begin{proof}
+    唯一可译码的有限子集仍是唯一可译的。
+\end{proof}
+
 \section{Huffman编码}
+
+Huffman编码是\textbf{最优编码的构造算法}。给定D元字母表$\Sigma$，X有概率分布$(p_1,\cdots,p_n)$，重复执行以下步骤：\\
+\ding{172}将概率按降序排列\\
+\ding{173}在这个排列方式中，选取末尾D个字符，依次赋码字$0\sim D-1$\\
+\ding{174}赫夫曼合并(Huffman reduction)：将此D个字符视作一个新字符，概率为各字符概率之和\\
+重复到只剩一个字符为止。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{huffman}
+    \caption{赫夫曼编码算法执行例}
+\end{figure}
+
+\begin{remark}
+    \ding{172}若$D\geq 3$，每一步减少字符数为D-1，字符总数必为1+k(D-1).如果$|\mathcal{X}|$不满足条件，需要添加概率为0的虚拟字符\\
+    \ding{173}将$p_j$视为权重时可以不要求$\sum p_j=1$，此时同样可以用赫夫曼码最小化码长加权和$\sum p_j l_j$\\
+    \ding{174}赫夫曼码不唯一。例如
+    $$D=2,p=\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right)$$
+\end{remark}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{huffman_dummy}
+    \caption{D=3,虚拟字符使用例}
+\end{figure}
+
+上图中缩减无兄弟的节点后即得\textbf{编码树}（字符对应叶子节点）
+\begin{example}
+    图4.1.的编码树为
+\begin{center}
+    \begin{tikzpicture}[>=stealth, every node/.style={circle,draw,inner sep=2pt},
+        level distance=1.5cm]
+        % 根节点及各深度坐标
+        \node[circle,draw] (root) at (0,0) {};
+        \node[circle,draw] (u)    at (-2,1) {};   % 深度1 上
+        \node[circle,draw] (l)    at (-2,-1){};   % 深度1 下
+        \node[circle,draw] (l2)   at (-4,-1.5){}; % 深度2 右分支
+        % 叶子节点：深度2的三个叶子和深度3的两个叶子
+        \node[right] (p1) at (-4,1.5) {$p_1$};
+        \node[right] (p2) at (-4,0.5) {$p_2$};
+        \node[right] (p3) at (-4,-0.5) {$p_3$};
+        \node[right] (p4) at (-6,-1.5) {$p_4$};
+        \node[right] (p5) at (-6,-2.5) {$p_5$};
+        % 定义标签样式，去掉圆圈和边框
+        \tikzset{edgelabel/.style={inner sep=1pt,draw=none}}
+        % 各树枝及标记
+        \draw[->,blue]    (root) -- node[midway,above,edgelabel] {1} (u);
+        \draw[->,blue]   (root) -- node[midway,below,edgelabel] {0} (l);
+        \draw[->,red]    (u) -- node[midway,above,edgelabel] {0} (p2);
+        \draw[->,red]    (u) -- node[midway,below,edgelabel] {1} (p3);
+        \draw[->,green]  (l) -- node[midway,above,edgelabel] {1} (p1);
+        \draw[->,green]  (l) -- node[midway,below,edgelabel] {0} (l2);
+        \draw[->,purple] (l2) -- node[midway,above,edgelabel] {0} (p4);
+        \draw[->,purple] (l2) -- node[midway,below,edgelabel] {1} (p5);
+    \end{tikzpicture}
+\end{center}
+\end{example}
+
+赫夫曼码是一种最优即时码。最优即时码是在期望长度最小意义下的即时码，它不是唯一的。
+
+\begin{lemma}[最优即时码的刻画]
+    任给分布$\mathbf{p}$，D=2，最优即时码必然满足：\\
+    (1)$p_i>p_j\implies l_i\leq l_j$，即码长与概率反序；\\
+    (2)最长的两个码字拥有相同的长度，且对应两个最小可能字符。
+
+    此外，总能构造编码满足下述条件：\\
+    (3)最长的两个码字仅在最后一位有差别
+
+    称满足(3)的最优编码是典则的(canonical).
+\end{lemma}
+\begin{proof}
+    (1)对$p_i>p_j$，设编码$C$满足$l_i\leq l_j$，$C'$为C交换i,j编码所得，则有
+    \begin{align*}
+        L(C')-L(C)&=p_j l_i+p_i l_j-p_i l_i-p_j l_j\\
+        &=(p_j-p_i)(l_i-l_j)\geq 0
+    \end{align*}
+
+    (2)(3)两个最长码字在编码树中对应兄弟节点，否则必然可以修剪编码树（删除码字最后一位）。
+\end{proof}
+
+\begin{remark}
+    (1)赫夫曼码满足
+    \[H(X)\leq L(C)<H(X)+1\]
+    (2)赫夫曼码是贪心算法，即局部最优$\to$全局最优
+\end{remark}
+
+\section{其他编码}
+
+1.\textbf{香农码}
+
+前面已经介绍。对于单个字符，赫夫曼码与香农码都可能有更短的码字长度，但平均意义下赫夫曼码才是最优编码。
+
+香农码具有唯一竞争最优性：在单局游戏中，以甲、乙对同一随机序列的编码长短决定胜负，则香农码是一个很好的策略。
+
+以下设D=2.
+\begin{theorem}
+    (1)设C为香农码，C'为其他唯一可译码，则
+    \begin{align*}
+        P\{l(X)\geq l'(X)+c\}\leq\frac{1}{2^{c-1}}
+    \end{align*}
+
+    (2)（香农码的唯一竞争最优性）设$p(x)$是二进制的，$l(x)=\log\dfrac{1}{p(x)}$为香农码的码字长度，则
+    \begin{align*}
+        \forall C',P\{l(X)<l'(X)\}\geq P\{l(X)>l'(X)\}
+    \end{align*}
+    取等$\iff \forall x,l(x)=l'(x)$。
+\end{theorem}
+\begin{corollary}
+    对于非二进制的p(x)，有\begin{align*}
+        \mathbb{E} sgn(l(X)-l'(X)-1)\leq 0
+    \end{align*}
+    其中l为香农码C的码字长度。
+\end{corollary}
+
+2.\textbf{费纳(Fano)编码}
+
+将概率值递减排列，然后选取k使得
+\[\left|\sum_{i=1}^k p_i-\sum_{i=k+1}^m p_i\right|\]
+最小（\textbf{二分概率}），概率高者赋0，概率低者赋1，再对子字符集重复此过程，直到每一字符分得唯一码字。
+
+一般来说，这种编码不是最优编码，但是可以达到$L(C)\leq H(X)+2$.
+
+3.\textbf{Shannon-Fano-Elias编码}
+
+考虑累积分布函数$F(x)=\sum_{a\leq x}p(a)$及其修正$\overline{F}(x)$，$\overline{F}(x)$在间断点处取左右平均值。
+
+以$\overline{F}(x)$的二进制表示的小数部分作为字符x的码字。在码字无限时，取前$\left\lceil \log\dfrac{1}{p(x)}\right\rceil+1$位即可。
+
+编码的唯一性：以$\lfloor \overline{F}(x)\rfloor_{l(x)}$记$\overline{F}(x)$保留$l(x)$位。取$l(x)=\left\lceil \log\dfrac{1}{p(x)}\right\rceil+1$，则
+\begin{align*}
+    F(x)-\lfloor \overline{F}(x)\rfloor_{l(x)}<\frac{1}{2^{l(x)}}<\frac{1}{2}2^{\log p(x)}=\frac{p(x)}{2}
+\end{align*}
+即$\lfloor \overline{F}(x)\rfloor_{l(x)}$在F(x)下方跳变幅度以内，对应了唯一的区间。
+
+这种编码的特点是：应用广泛；$L(C)<H(X)+2$；必为前缀码（考虑区间树可证）
 
 \chapter{信道容量}
 
@@ -630,7 +946,7 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     如果指标W的选取服从均匀分布，则$P^{(n)}_e=P\{W\neq g(Y^n)\}$。
 \end{remark}
 \begin{remark}
-    显然，$P_e^{(n)}\leq \lambda^{(n)}$。通常希望这二者差异大，但将证明：在相同码率下，平均误差概率小$\implies$最大误差概率小
+    显然，$P_e^{(n)}\leq \lambda^{(n)}$。理应希望这二者差异大，但将证明：在相同码率下，平均误差概率小$\implies$最大误差概率小
 \end{remark}
 
 \begin{definition}[码率]
@@ -652,5 +968,67 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     其中
     \[p(x^n,y^n)=\prod_{i=1}^{n}p(x_i,y_i)\]
 \end{definition}
+
+\begin{theorem}[联合AEP]
+    设$(X^n,Y^n)$为服从$p(x^n,y^n)=\prod_{i=1}^n p(x_i,y_i)$的i.i.d.的n长序列，则
+
+    \ding{172}$P\{(X^n,Y^n)\in A^{(n)}_{\epsilon}\}\to 1,n\to\infty$
+
+    \ding{173}$|A^{(n)}_{\epsilon}|\leq 2^{n(H(X,Y)+\epsilon)}$
+
+    \ding{174}如果$(\tilde{X}^n,\tilde{Y}^n)\sim p(x^n)p(y^n)$（i.e.$\tilde{X}^n$与$\tilde{Y}^n$独立且具有$p(x^n,y^n)$的边界分布，与$X^n,Y^n$分别同分布），则
+    \begin{align*}
+        P\left\{\left(\tilde{X}^n,\tilde{Y}^n\right)\in A^{(n)}_{\epsilon}\right\}\leq 2^{-n(I(X;Y)-3\epsilon)}
+    \end{align*}
+    且对于充分大的n，有\begin{align*}
+        P\left\{\left(\tilde{X}^n,\tilde{Y}^n\right)\in A^{(n)}_{\epsilon}\right\}\geq (1-\epsilon)2^{-n(I(X;Y)+3\epsilon)}
+    \end{align*}
+\end{theorem}
+\begin{proof}
+    \ding{172}由弱大数定律，\begin{align*}
+        &-\frac{1}{n}\log p(X^n)\to -\mathbb{E} \log p(X)=H(X)&\text{依概率}
+    \end{align*}
+    故$\forall \epsilon>0,\exists n_1,n>n_1$时，有\begin{align*}
+        P\left\{\left|-\frac{1}{n}\log p(X^n)-H(X)\right|\geq \epsilon\right\}<\frac{\epsilon}{3}
+    \end{align*}
+    同理，\begin{align*}
+        &-\frac{1}{n}\log p(Y^n)\to -\mathbb{E} \log p(Y)=H(Y)&\text{依概率}
+    \end{align*}\begin{align*}
+        &-\frac{1}{n}\log p(X^n,Y^n)\to -\mathbb{E} \log p(X,Y)=H(X,Y)&\text{依概率}
+    \end{align*}
+    从而有$n_2,n_3$，\begin{align*}
+        n>n_2\implies P\left\{\left|-\frac{1}{n}\log p(Y^n)-H(Y)\right|\geq \epsilon\right\}<\frac{\epsilon}{3}
+    \end{align*}\begin{align*}
+        n>n_3\implies P\left\{\left|-\frac{1}{n}\log p(X^n,Y^n)-H(X,Y)\right|\geq \epsilon\right\}<\frac{\epsilon}{3}
+    \end{align*}
+    
+    取$n>\max\{n_1,n_2,n_3\}$，则
+    \begin{align*}
+        P\{(X^n,Y^n)\in A^{(n)}_{\epsilon}\}>1-\epsilon
+    \end{align*}
+
+    \ding{173}注意到\begin{align*}
+        1&=\sum p(x^n,y^n)\\
+        &\geq \sum_{A^{(n)}_{\epsilon}}p(x^n,y^n)\\
+        &\geq |A^{(n)}_{\epsilon}|\cdot 2^{-n(H(X<Y)+\epsilon)}
+    \end{align*}
+    这与要证的式子是等价的。最后一行成立是因为，根据$A^{(n)}_{\epsilon}$的定义（最后一条），每个$A^{(n)}_{\epsilon}$的元素$(x^n,y^n)$都满足\begin{align*}
+        -n(H(X,Y)+\epsilon)<\log p(x^n,y^n)<-n(H(X,Y)-\epsilon)
+    \end{align*}
+    
+    \ding{174}在这种假设下，有\begin{align*}
+        P\left\{\left(\tilde{X}^n,\tilde{Y}^n\right)\in A^{(n)}_{\epsilon}\right\}&=\sum_{(x^n,y^n)\in A^{(n)}_{\epsilon}}p(x^n)p(y^n)\\
+        &\leq 2^{n(H(X,Y)+\epsilon)}\cdot 2^{-n(H(X)-\epsilon)}\cdot 2^{-n(H(Y)-\epsilon)}\\
+        &=2^{-n(I(X;Y)-3\epsilon)}
+    \end{align*}
+
+    在n充分大时，$P\left\{\left(\tilde{X}^n,\tilde{Y}^n\right)\in A^{(n)}_{\epsilon}\right\}\geq 1-\epsilon$，因此\begin{align*}
+        1-\epsilon&\leq\sum_{(x^n,y^n)\in A^{(n)}_{\epsilon}}p(x^n,y^n)\\
+        &\leq |A^{(n)}_{\epsilon}|\cdot 2^{-n(H(X,Y)-\epsilon)}
+    \end{align*}
+    即证后一不等式。
+\end{proof}
+
+\chapter{最后一页}
 
 \end{document}
