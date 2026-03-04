@@ -489,7 +489,7 @@
 \end{proof}
 
 \begin{lemma}
-    \[H{Y_n|Y_{n-1},\cdots,Y_1}-H(Y_n|Y_{n-1},\cdots,Y_1,X_1)\to 0,n\to\infty\]
+    \[H(Y_n|Y_{n-1},\cdots,Y_1)-H(Y_n|Y_{n-1},\cdots,Y_1,X_1)\to 0,n\to\infty\]
 \end{lemma}
 \begin{proof}
 \begin{align*}
@@ -957,6 +957,8 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     信道容量定义为可达码率的上确界。
 \end{definition}
 
+\section{联合典型序列}
+
 \begin{definition}[联合典型序列]
     服从分布$p(x,y)$的联合典型序列(jointly typical sequence)$\{(x^n,y^n)\}$所构成的集合$A^{(n)}_{\epsilon}$是指其经验熵与真实熵以$\epsilon$为界靠近的n长序列构成的集合，即：
     \begin{align*}
@@ -968,6 +970,8 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     其中
     \[p(x^n,y^n)=\prod_{i=1}^{n}p(x_i,y_i)\]
 \end{definition}
+
+定义包括单独典型+联合典型，即单独出现概率高，且联合出现被认为是合理的。
 
 \begin{theorem}[联合AEP]
     设$(X^n,Y^n)$为服从$p(x^n,y^n)=\prod_{i=1}^n p(x_i,y_i)$的i.i.d.的n长序列，则
@@ -1010,7 +1014,7 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     \ding{173}注意到\begin{align*}
         1&=\sum p(x^n,y^n)\\
         &\geq \sum_{A^{(n)}_{\epsilon}}p(x^n,y^n)\\
-        &\geq |A^{(n)}_{\epsilon}|\cdot 2^{-n(H(X<Y)+\epsilon)}
+        &\geq |A^{(n)}_{\epsilon}|\cdot 2^{-n(H(X,Y)+\epsilon)}
     \end{align*}
     这与要证的式子是等价的。最后一行成立是因为，根据$A^{(n)}_{\epsilon}$的定义（最后一条），每个$A^{(n)}_{\epsilon}$的元素$(x^n,y^n)$都满足\begin{align*}
         -n(H(X,Y)+\epsilon)<\log p(x^n,y^n)<-n(H(X,Y)-\epsilon)
@@ -1028,6 +1032,15 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     \end{align*}
     即证后一不等式。
 \end{proof}
+
+\section{信道编码定理}
+
+\begin{theorem}[信道编码定理/香农第二定理]
+    对于离散无记忆信道，小于信道容量$C$的所有码率都是可达的，即$\forall R<C$，存在$(2^{nR},n)$码使得最大误差概率$\lambda^{(n)}\to 0,n\to\infty$；
+    
+    反之，任何满足$\lambda^{(n)}\to 0,n\to\infty$的$(2^{nR},n)$码必然满足$R\leq C$。
+\end{theorem}
+
 
 \chapter{最后一页}
 
