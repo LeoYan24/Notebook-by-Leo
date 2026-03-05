@@ -263,7 +263,9 @@
     最小充分统计量最大程度地压缩了样本X中关于$\theta$的信息，而其他充分统计量可能包含冗余信息
 \end{remark}
 
-由随机变量Y估计与之有关的X，X的估计值记为$\hat{X}=g(Y)$取值空间为$\hat{\mathcal{X}}$，则有马尔可夫链$X \to Y \to \hat{X}$。定义误差概率$P_e = P\{\hat{X} \neq X\}$。
+由随机变量Y估计与之有关的X，X的估计值记为$\hat{X}=g(Y)$取值空间为$\hat{\mathcal{X}}$，则有马尔可夫链
+$$X \to Y \to \hat{X}$$
+定义误差概率$P_e = P\{\hat{X} \neq X\}$。
 \begin{theorem}[Fano不等式]
     设X为离散型随机变量，取值（样本空间）为$\mathcal{X}$，则有
     \[H(P_e) + P_e \log (|\mathcal{X}| - 1) \geq H(X|\hat{X})\geq H(X|Y)\]
@@ -913,6 +915,17 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     \caption{离散通信信道模型}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ds3.5.1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ds3.5.2}
+    \caption{信源编码与信道编码的关系}
+\end{figure}
+
 \begin{definition}[$(M,n)$码]
     信道$(\mathcal{X} ,p(y|x),\mathcal{Y} )$的$(M,n)$码由以下部分构成：\begin{itemize}
         \item 指标集$\{1,2,\cdots,M\}$
@@ -948,6 +961,8 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
 \begin{remark}
     显然，$P_e^{(n)}\leq \lambda^{(n)}$。理应希望这二者差异大，但将证明：在相同码率下，平均误差概率小$\implies$最大误差概率小
 \end{remark}
+
+码率衡量了\textbf{每个信道符号能够传输的平均信息量}：
 
 \begin{definition}[码率]
     $(M,n)$码的码率(rate)为
@@ -1041,6 +1056,186 @@ $I(X;Y)$关于输入分布$p(x)$是紧集上的连续的凹函数，因此最大
     反之，任何满足$\lambda^{(n)}\to 0,n\to\infty$的$(2^{nR},n)$码必然满足$R\leq C$。
 \end{theorem}
 
+P115页，原定理证明的表述看不懂，只给逆定理。
+
+\begin{lemma}[Fano不等式]
+    设离散无记忆信道的码本为C，输入消息W服从均匀分布，则\begin{align*}
+        H(W|\hat{W})\leq 1+P_e nR
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    由于W服从均匀分布，有
+    $$P_e^{(n)}=P\{W\neq \hat{W}\}$$
+    定义指示变量$E=\mathbf{1}\{W\neq \hat{W}\}$，则用Fano不等式，\begin{align*}
+        H(W|\hat{W})&=H(W,E|\hat{W})\\
+        &=H(E|\hat{W})+H(W|E,\hat{W})\\
+        &\leq H(E)+P_e^{(n)}\log M\\
+        &\leq 1+P_e^{(n)} nR
+    \end{align*}
+\end{proof}
+
+多次使用离散无记忆信道，容量是线性的：
+
+\begin{lemma}
+    设$Y^n$为$X^n$经过容量为C的离散无记忆信道传输所得的输出信号，则\begin{align*}
+        I(X^n;Y^n)\leq nC,\forall p(x^n)
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    已知$Y_k$仅依赖于$X_k$而与其他输入条件独立，因此有\begin{align*}
+        I(X^n;Y^n)&=H(Y^n)-H(Y^n|X^n)\\
+        &=H(Y^n)-\sum_{k=1}^n H(Y_k|Y_1,\cdots,Y_{k-1},X^n)\\
+        &=H(Y^n)-\sum_{k=1}^n H(Y_k|X_k)\\
+        &\leq \sum_{k=1}^n H(Y_k)-\sum_{k=1}^n H(Y_k|X_k)\\
+        &=\sum_{k=1}^n I(X_k;Y_k)\\
+        &\leq nC
+    \end{align*}
+    其中第一个不等号可以由熵的链式法则+“条件熵$\leq$熵”得到。
+\end{proof}
+
+\begin{theorem}[信道编码定理的弱逆定理]
+    设$W$服从均匀分布，则任意满足$\lambda^{(n)}\to 0,n\to\infty$的$(2^{nR},n)$码必然满足$R\leq C$。
+\end{theorem}
+\begin{proof}
+    给定编码规则$x^n(\cdot)$和译码规则$\hat{W}=g(Y^n)$，有Markov链$$W\to X^n\to Y^n\to \hat{W}$$
+    因此\begin{align*}
+        nR&=H(W)&(W\sim U_{\{1,2,\cdots,2^{nR}\}})\\
+        &= I(W;\hat{W})+H(W|\hat{W})\\
+        &\leq I(X^n;Y^n)+1+P_e^{(n)} nR&(\text{数据处理+Fano})\\
+        &\leq nC+1+P_e^{(n)} nR&(\text{前一引理})
+    \end{align*}
+    即\begin{align*}
+        R\leq C+\frac{1}{n}+P_e^{(n)} R
+    \end{align*}
+    令$n\to\infty$，$\lambda^{(n)}\to 0\implies P_e^{(n)}\to 0$，从而$R\leq C$。
+\end{proof}
+
+以上证明还能顺便得到\begin{align*}
+        P_e^{(n)}\geq 1-\frac{C}{R}-\frac{1}{nR}
+    \end{align*}
+因此当$R>C$时，$P_e^{(n)}\to 1,n\to\infty$，从而对于所有的n，误差概率无法充分接近0，否则串联这些短码可使$P_e^{(n)}$充分接近0。
+
+\begin{theorem}[信道编码定理的强逆定理]
+   设$W$服从均匀分布，如果码率$R>C$，则对于任意$(2^{nR},n)$码，最大误差概率$\lambda^{(n)}\to 1,n\to\infty$（以指数级）；反之，如果$R<C$，则存在$(2^{nR},n)$码使得$\lambda^{(n)}\to 0,n\to\infty$（以指数级）。 
+\end{theorem}
+
+\section{反馈容量}
+
+\begin{definition}[反馈码]
+    $(2^{nR},n)$反馈码的编码函数为\begin{align*}
+        x_k:\{1,2,\cdots,2^{nR}\}\times \mathcal{Y} ^{k-1}\to \mathcal{X} ,\forall k\in\{1,2,\cdots,n\}
+    \end{align*}
+    它与消息$W$和之前的输出$Y_1,\cdots,Y_{k-1}$相关。译码函数同前。
+\end{definition}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{feedback_channel}
+    \caption{带反馈的离散通信信道模型}
+\end{figure}
+
+当$W\sim U_{\{1,2,\cdots,2^{nR}\}}$时，$(2^{nR},n)$反馈码的平均误差概率为
+\begin{align*}
+    P_e^{(n)}=P\{W\neq g(Y^n)\}
+\end{align*}
+
+\begin{definition}[带反馈容量]
+    离散无记忆信道的带反馈容量(feedback capacity)$C_{FB}$定义为可达反馈码率的上确界，即存在$(2^{nR},n)$反馈码使得$P_e^{(n)}\to 0,n\to\infty$的最大R。
+\end{definition}
+
+引入反馈无法增加信道容量：
+\begin{theorem}[反馈容量]
+    设W服从均匀分布，则离散无记忆信道的带反馈容量等于其信息信道容量，即$C_{FB}=C$。
+\end{theorem}
+\begin{proof}
+    类似弱逆定理的证明，\begin{align*}
+        nR=H(W)&=H(W|\hat{W})+I(W;\hat{W})\\
+        &\leq 1+P_e^{(n)} nR+I(W;\hat{W})&(\text{lemma:Fano不等式})\\
+        &\leq 1+P_e^{(n)} nR+I(W;Y^n)&(\text{数据处理不等式})
+    \end{align*}    
+
+    下面估计$I(W;Y^n)$，由于$Y_k$仅依赖于$X_k$而与其他输入条件独立，因此\begin{align*}
+        I(W;Y^n)&=H(Y^n)-H(Y^n|W)\\
+        &=H(Y^n)-\sum_{k=1}^n H(Y_k|Y_1,\cdots,Y_{k-1},W)\\
+        &=H(Y^n)-\sum_{k=1}^n H(Y_k|Y_1,\cdots,Y_{k-1},W,X_k)&(X_k\text{是}Y_1,\cdots,Y_{k-1},W\text{的函数})\\
+        &=H(Y^n)-\sum_{k=1}^n H(Y_k|X_k)&(\text{条件独立性})\\
+        &\leq \sum_{k=1}^n H(Y_k)-\sum_{k=1}^n H(Y_k|X_k)\\
+        &=\sum_{k=1}^n I(X_k;Y_k)\\
+        &\leq nC
+\end{align*}
+
+    从而\begin{align*}
+        R\leq C+\frac{1}{n}+P_e^{(n)} R
+    \end{align*}
+    令$n\to\infty$，$\lambda^{(n)}\to 0\implies P_e^{(n)}\to 0$，从而$R\leq C$。
+\end{proof}
+
+不过，\textbf{反馈能够简化编码和译码}。
+
+\section{信源信道分离定理}
+
+通过信道发送字符序列$V^n=V_1,V_2,\cdots,V_n$，希望保证接收者可以重构序列。为此将序列映射成码字$X^n(V^n)$，通过信道发送码字，接收者得到$Y^n$，给出发送序列$V^n$的估计$\hat{V}^n=g(Y^n)$。
+
+\begin{definition}[误差概率]
+    定义误差概率为：\begin{align*}
+        P\{V^n\neq \hat{V}^n\}=\sum_{y^n}\sum_{v^n}p(v^n)p(y^n|x^n(v^n))I\{v^n\neq \hat{v}^n(y^n)\}
+    \end{align*}
+    其中$I$为示性函数，$g(y^n)$为译码函数
+\end{definition}
+
+系统如下图：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{comb_code.jpg}
+    \caption{联合信源信道编码}
+\end{figure}
+
+\begin{theorem}[信源信道编码定理]
+    设$V_1,\cdots,V_n$为有限字母表上满足AEP（将证明平稳遍历信源均满足AEP）和$H(\mathcal{V})<C$的随机过程，则存在一个信源信道编码使得误差概率$P\{V^n\neq \hat{V}^n\}\to 0,n\to\infty$；反之，对任意平稳随机过程，如果$H(\mathcal{V})>C$，则对于任意信源信道编码，误差概率$P\{V^n\neq \hat{V}^n\}\to 1,n\to\infty$，从而不可能以任意低误差概率通过信道发送该过程。
+\end{theorem}
+\begin{proof}
+    (1)可达性：两步骤编码
+
+    AEP$\implies\exists$典型集$A^{(n)}_{\epsilon}$，满足$|A^{(n)}_{\epsilon}|\leq 2^{n(H(\mathcal{V})+\epsilon)}$且$P\{V^n\in A^{(n)}_{\epsilon}\}\to 1,n\to\infty$，则典型集外的所有序列产生一个错误，对误差概率的贡献不超过$\epsilon$。
+
+    用$n(H+\epsilon)$bit给典型集中的序列编号。可以以低于$\epsilon$的误差概率发送这些编号，如果
+    $$H(\mathcal{V})+\epsilon=R<C$$
+
+    信宿可以通过枚举典型集$A^{(n)}_{\epsilon}$中的序列，并选择与被估计编号对应的序列（根据典型性）来重构输入序列，从而以误差概率不超过$\epsilon$的方式发送输入序列。具体来说，n充分大时，有
+    $$P\{V^n\neq \hat{V^n}\}\leq P\{V^n\notin A^{(n)}_{\epsilon}\}+P\{\hat{V}^n\neq V^n|V^n\in A^{(n)}_{\epsilon}\}\leq 2\epsilon$$
+
+    因此，只要$H(\mathcal{V})<C$，就可以找到足够大的n使得能够以任意小的误差概率通过信道发送输入序列。
+
+    (2)逆定理
+
+    希望证明，对于任意信源信道编码序列
+    $$X^n(V^n):\mathcal{V}^n\to \mathcal{X} ^n$$
+    $$g_n:\mathcal{Y} ^n\to \mathcal{V}^n$$
+    都有$P\{V^n\neq \hat{V}^n\}\to 0\implies H(\mathcal{V})\leq C$。其中$X^n$为信源数据序列$V^n$的任意码字分配函数，$g_n$为任意译码函数。
+
+    有Markov链$$V^n\to X^n\to Y^n\to \hat{V}^n$$
+
+    由Fano不等式，\begin{align*}
+        H(V^n|\hat{V}^n)&\leq 1+P\{V^n\neq \hat{V}^n\}\log |\mathcal{V} ^n|\\
+        &=1+nP\{V^n\neq \hat{V}^n\}\log |\mathcal{V} |
+    \end{align*}
+    因此\begin{align*}
+        H(\mathcal{V} )&\leq\frac{H(V_1,\cdots,V_n)}{n}=\frac{H(V^n)}{n}&(\text{平稳过程的熵率定义})\\
+        &=\frac{H(V^n|\hat{V}^n)}{n}+\frac{I(V^n;\hat{V}^n)}{n}\\
+        &\leq \frac{1}{n}+P\{V^n\neq \hat{V}^n\}\log |\mathcal{V} |+\frac{I(X^n;Y^n)}{n}&(\text{Fano+数据处理})\\
+        &\leq \frac{1}{n}+P\{V^n\neq \hat{V}^n\}\log |\mathcal{V} |+C&(\text{信道的无记忆性})
+    \end{align*}
+
+    令$n\to\infty$，$P\{V^n\neq \hat{V}^n\}\to 0$，从而$H(\mathcal{V} )\leq C$。
+\end{proof}
+
+分离定理表明，下图的分离编码器与前面的联合编码器能达到相同的码率，因此可以将信源编码和信道编码分开设计，信源编码器负责找到信源的最有效表示，信道编码器要使编码消息具备能对抗信道中的噪声和错误的能力。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{separate_code.jpg}
+    \caption{分离信源信道编码}
+\end{figure}
 
 \chapter{最后一页}
 
