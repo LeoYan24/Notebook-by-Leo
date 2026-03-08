@@ -334,7 +334,7 @@ $$X \to Y \to \hat{X}$$
 
 \begin{definition}[典型集]
     关于p(x)的典型集(typical set)定义为
-    \[A_{\epsilon}^{(n)} = \left\{(x_1,x_2,\ldots,x_n)\left|-\frac{1}{n} \log p(x_1,x_2,\ldots,x_n) - H(X)\right. < \epsilon\right\}\]
+    \[A_{\epsilon}^{(n)} = \left\{(x_1,x_2,\ldots,x_n):\left|-\frac{1}{n} \log p(x_1,x_2,\ldots,x_n) - H(X)\right| < \epsilon\right\}\]
     性质：
     
     \ding{172} $$\forall \mathbf{x}\in A_{\epsilon}^{(n)},H(X)-\epsilon < -\frac{1}{n} \log p(\mathbf{x}) < H(X)+\epsilon$$
@@ -1236,6 +1236,294 @@ P115页，原定理证明的表述看不懂，只给逆定理。
     \includegraphics[width=0.8\textwidth]{separate_code.jpg}
     \caption{分离信源信道编码}
 \end{figure}
+
+\chapter{微分熵}
+
+\section{微分熵}
+
+在概率密度函数存在时，定义：
+
+\begin{definition}[微分熵]
+    设连续随机变量$X$的概率密度函数为$f(x)$，则$X$的微分熵(differential entropy)定义为
+    \[h(X)=h(f)=-\int f(x)\log f(x)dx=\mathbb{E} \log \frac{1}{f(X)}\]
+\end{definition}
+
+微分熵可能为负。例如均匀分布$X\sim U(a,b)$，$h(X)=\log(b-a)$。
+
+\begin{definition}[联合微分熵]
+    设连续随机变量$(X_1,\cdots,X_n)$的联合概率密度函数为$f(x_1,\cdots,x_n)$，则$(X_1,\cdots,X_n)$的联合微分熵定义为
+    \[h(X_1,\cdots,X_n)=-\int f(x^n)\log f(x^n)dx^n=\mathbb{E} \log \frac{1}{f(X^n)}\]
+\end{definition}
+
+\begin{definition}[条件微分熵]
+    设连续随机变量$(X,Y)$的联合概率密度函数为$f(x,y)$，则$X$在已知$Y$的条件下的条件微分熵定义为
+    \[h(X|Y)=-\int\int f(x,y)\log f(x|y)dxdy=\mathbb{E} \log \frac{1}{f(X|Y)}\]
+    其中$$f(x|y)=\dfrac{f(x,y)}{f_Y(y)}$$为条件概率密度函数。由此,在不涉及积分发散的前提下，有：\begin{align*}
+        h(X|Y)&=h(X,Y)-h(Y)
+    \end{align*}
+\end{definition}
+
+条件微分熵是取条件于$Y$所得的微分熵：\begin{align*}
+    h(X|Y=y)=-\int f(x|y)\log f(x|y)dx
+\end{align*}
+\begin{align*}
+    h(X|Y)=\int f_Y(y)h(X|Y=y)dy=\mathbb{E} [h(X|Y=y)]
+\end{align*}
+
+\begin{example}[多元正态分布的熵]
+    设$X_1,\cdots,X_n$服从均值为$\mu$，协方差矩阵为$K$的多元正态分布，则\begin{align*}
+        h(X_1,\cdots,X_n)&=\frac{1}{2}\log((2\pi e)^n|K|)
+    \end{align*}
+
+    证明：联合概率密度函数为\begin{align*}
+        f(\mathbf{x})&=\frac{1}{(2\pi)^{\frac{n}{2}}|K|^{\frac{1}{2}}}\exp\left(-\frac{1}{2}(\mathbf{x}-\mu)^T K^{-1}(\mathbf{x}-\mu)\right)
+    \end{align*}
+    由定义，\begin{align*}
+        h(X_1,\cdots,X_n)&=-\int f(\mathbf{x})\left[-\frac{1}{2}(\mathbf{x}-\mu)^T K^{-1}(\mathbf{x}-\mu)-\frac{n}{2}\ln(2\pi)-\frac{1}{2}\ln|K|\right]d\mathbf{x}\\
+        &=\frac{1}{2}\int f(\mathbf{x})(\mathbf{x}-\mu)^T K^{-1}(\mathbf{x}-\mu)d\mathbf{x}+\frac{1}{2}\ln (2\pi)^n |K|\\
+        &=n+\frac{1}{2}\ln (2\pi)^n |K|\\
+        &=\frac{1}{2}\ln((2\pi e)^n|K|)(\text{奈特})\\
+        &=\frac{1}{2}\log((2\pi e)^n|K|)(\text{比特})
+    \end{align*}
+    其中，\begin{align*}
+        \int f(\mathbf{x})(\mathbf{x}-\mu)^T K^{-1}(\mathbf{x}-\mu)d\mathbf{x}&=\mathbb{E}\left[\sum_{i,j} (X_i-\mu_i)(K^{-1})_{ij}(X_j-\mu_j)\right]\\
+        &=\sum_{i,j} (K^{-1})_{ij} \mathbb{E}[(X_i-\mu_i)(X_j-\mu_j)]\\
+        &=\sum_{i,j} (K^{-1})_{ij} K_{ji}\\
+        &=\text{tr}(K^{-1}K)\\
+        &=n
+    \end{align*}
+\end{example}
+
+\begin{definition}[相对熵]
+    两个概率密度函数$f(x)$和$g(x)$的相对熵(relative entropy)定义为
+\begin{align*}
+    D(f||g)=\int f(x)\log \frac{f(x)}{g(x)}dx=\mathbb{E}_f \log \frac{f(X)}{g(X)}
+\end{align*}
+    仅当$\text{supp}(f)\subseteq \text{supp}(g)$，即$g=0\implies f=0$时，$D(f||g)$有限。
+\end{definition}
+
+\begin{definition}[互信息]
+    设连续随机变量$(X,Y)$的联合概率密度函数为$f(x,y)$，则$X$与$Y$的互信息定义为
+    \begin{align*}
+        I(X;Y)=\int\int f(x,y)\log \frac{f(x,y)}{f(x)f(y)}dxdy=\mathbb{E} \log \frac{f(X,Y)}{f(X)f(Y)}
+    \end{align*}
+\end{definition}
+
+由定义，\begin{align*}
+    I(X;Y)=D(f(x,y)||f(x)f(y))
+\end{align*}
+
+\begin{align*}
+    I(X;Y)&=h(X)-h(X|Y)\\
+    &=h(Y)-h(Y|X)\\
+    &=h(X)+h(Y)-h(X,Y)
+\end{align*}
+
+\section{连续随机变量的AEP}
+
+\begin{definition}[典型集]
+    $\forall \epsilon>0,n\in\mathbb{N}^+$，定义连续随机变量$X\sim f(x)$的典型集为
+    $$A^{(n)}_{\epsilon}=\left\{x^n\in \mathbb{R} ^n:\left|-\frac{1}{n}\log f(x^n)-h(X)\right|<\epsilon\right\}$$
+    其中$$f(x^n)=\prod_{i=1}^n f(x_i)$$
+\end{definition}
+
+以$\text{Vol}(A)$表示集合$A$的体积，则有以下连续版本的AEP：
+
+\begin{theorem}[连续版本的AEP]
+    设$X_1,X_2,\cdots,X_n$为i.i.d.的连续随机变量，且$X_i\sim f(x)$，则\begin{itemize}
+        \item 对充分大的n，有$P\{X^n\in A^{(n)}_{\epsilon}\}>1-\epsilon$
+        \item $\forall n,\text{Vol}(A^{(n)}_{\epsilon})\leq 2^{n(h(X)+\epsilon)}$
+        \item 对充分大的n，有$\text{Vol}(A^{(n)}_{\epsilon})\geq (1-\epsilon)2^{n(h(X)-\epsilon)}$
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    由弱大数定律，\begin{align*}
+        &-\frac{1}{n}\log f(X^n)\to -\mathbb{E} \log f(X)=h(X)&\text{依概率}
+    \end{align*}
+    从而$\forall \epsilon>0,\exists N$，当$n>N$时，有\begin{align*}
+        P\left\{\left|-\frac{1}{n}\log f(X^n)-h(X)\right|\geq \epsilon\right\}\leq\epsilon
+    \end{align*}
+    此即性质1.
+
+    由于\begin{align*}
+        1&=\int f(x^n)dx^n\\
+        &\geq \int_{A^{(n)}_{\epsilon}}f(x^n)dx^n\\
+        &\geq \text{Vol}(A^{(n)}_{\epsilon})\cdot 2^{-n(h(X)+\epsilon)}
+    \end{align*}
+    从而性质2成立。其中，$f(x^n)$的下界得自典型集的定义：\begin{align*}
+        -n(h(X)+\epsilon)<\log f(x^n)<-n(h(X)-\epsilon)\\
+        \iff 2^{-n(h(X)+\epsilon)}<f(x^n)<2^{-n(h(X)-\epsilon)},\forall x^n\in A^{(n)}_{\epsilon}
+    \end{align*}
+
+    对于$n>N$，有\begin{align*}
+        1-\epsilon&\leq \int_{A^{(n)}_{\epsilon}}f(x^n)dx^n\\
+        &\leq \text{Vol}(A^{(n)}_{\epsilon})\cdot 2^{-n(h(X)-\epsilon)}
+    \end{align*}
+    从而性质3成立。
+\end{proof}
+
+\begin{theorem}
+    在一阶指数意义下，所有概率$\geq 1-\epsilon$的集合中，$A^{(n)}_{\epsilon}$的体积最小。
+\end{theorem}
+
+占有大部分概率的最小集合，体积约为$2^{nh(X)}$。由于$X_k\ $i.i.d.，典型集是n维正方体，边长约为$2^{h(X)}$。这是微分熵的一种解释：熵是拥有大部分概率的最小集的边长值。
+
+较低的微分熵意味着正方形较小，而较高的熵意味着随机变量高度分散。
+
+\section{微分熵与离散熵的关系}
+
+1.\textbf{微分熵}
+
+将$X\sim f(x)$的连续随机变量进行量化，量化长度为$\Delta$，得到离散随机变量$X_\Delta$，定义为：
+\[X_\Delta=x_k,k\Delta\leq X<(k+1)\Delta\]
+其中$x_k$为满足
+$$f(x_k)\Delta=\int_{k\Delta}^{(k+1)\Delta} f(x) dx$$
+的值。
+
+其概率质量函数为
+\[p_k=P(X_\Delta = k\Delta) = \int_{k\Delta}^{(k+1)\Delta} f(x) dx=f(x_k)\Delta\]
+熵为\begin{align*}
+    H(X_\Delta)&=-\sum_{k} p_k \log p_k\\
+    &=-\sum_{k} f(x_k)\Delta \log (f(x_k)\Delta)\\
+    &=-\sum_{k} f(x_k)\Delta \log f(x_k)-\sum_{k} f(x_k)\Delta \log \Delta\\
+    &=-\sum_{k} f(x_k) \log f(x_k)\Delta-\log \Delta
+\end{align*}
+
+在$f(x)\log f(x)$黎曼可积，且量化长度$\Delta\to 0$时，\begin{align*}
+    H(X_\Delta)+\log \Delta&=-\sum_{k} f(x_k) \log f(x_k)\Delta\\
+    &\to -\int f(x)\log f(x) dx\\
+    &=h(X)
+\end{align*}
+
+于是，连续型随机变量进行n比特均匀量化处理，量化长度为$\Delta=2^{-n}$，得到的离散随机变量的熵满足\begin{align*}
+    H(X_\Delta)=h(X)+n
+\end{align*}
+\textbf{在精确到n位的意义下，$h(X)+n$是描述X所需的平均比特数}。
+
+2.\textbf{互信息}
+
+两个随机变量之间的互信息时经过均匀量化的随机变量之间的互信息的极限：
+\begin{align*}
+    I(X_\Delta;Y_\Delta)&=H(X_\Delta)-H(X_\Delta|Y_\Delta)\approx (h(X)-\log\Delta)-(h(X|Y)-\log\Delta)=I(X;Y)
+\end{align*}
+
+更一般地，设$\mathcal{P},\mathcal{Q} $分别为X和Y的所有可能的量化方案（有限划分方式），$\mathcal{X} =\sqcup_k P_k$，$\mathcal{Y} =\sqcup_l Q_l$，对应的离散型随机变量为$[X]_{\mathcal{P}}$，$[Y]_{\mathcal{Q}}$，定义\begin{align*}
+    P\{[X]_\mathcal{P} = k\}=\int_{P_k}dF(x),\quad P\{[Y]_\mathcal{Q} = l\}=\int_{Q_l}dF(y)
+\end{align*}
+    则\begin{align*}
+    I(X;Y)=\sup_{\mathcal{P} ,\mathcal{Q} } I([X]_\mathcal{P};[Y]_\mathcal{Q})
+\end{align*}
+
+因为在加密分割下，$I([X]_\mathcal{P};[Y]_\mathcal{Q})$递增趋于$I(X;Y)$。
+
+\section{微分熵，相对熵与互信息的性质}
+
+\begin{theorem}
+    $$D(f||g)\geq 0$$
+    取等$\iff f=g,a.e.$
+\end{theorem}
+\begin{proof}
+    记$\text{supp}(f)=S$，则\begin{align*}
+        D(f||g)&=\int_S f(x)\log \frac{f(x)}{g(x)}dx\\
+        &\geq \log\int_S f(x)\frac{g(x)}{f(x)}dx&(Jensen)\\
+        &=\log\int_S g(x)dx\\
+        &=\log 1\\
+        &=0
+    \end{align*}
+\end{proof}
+\begin{corollary}
+    $$I(X;Y)\geq 0$$
+    取等$\iff X$独立于$Y$
+\end{corollary}
+
+\begin{corollary}
+    $$h(X|Y)\leq h(X)$$
+    取等$\iff X$独立于$Y$
+\end{corollary}
+
+\begin{theorem}[微分熵的链式法则]
+    $$h(X_1,\cdots,X_n)=\sum_{k=1}^{n}h(X_k|X_1,\cdots,X_{k-1})$$
+\end{theorem}
+\begin{corollary}
+    $$h(X_1,\cdots,X_n)\leq \sum_{k=1}^{n}h(X_k)$$
+    取等$\iff X_1,\cdots,X_n$相互独立
+\end{corollary}
+
+随机变量的平移与伸缩：
+
+\begin{theorem}
+    $$h(X)=h(X+c),\forall c\in \mathbb{R}$$
+\end{theorem}
+
+\begin{theorem}
+    $$h(aX)=h(X)+\log |a|,\forall a\in \mathbb{R}\setminus\{0\}$$
+\end{theorem}
+\begin{proof}
+    $Y=aX$的概率密度函数为\begin{align*}
+        f_Y(y)=\frac{1}{|a|}f_X\left(\frac{y}{a}\right)
+    \end{align*}
+    因此\begin{align*}
+        h(Y)&=-\int f_Y(y)\log f_Y(y)dy\\
+        &=-\int \frac{1}{|a|}f_X\left(\frac{y}{a}\right)\log \left(\frac{1}{|a|}f_X\left(\frac{y}{a}\right)\right)dy\\
+        &=-\int f_X(x)\log \left(\frac{1}{|a|}f_X(x)\right)dx&(y=ax)\\
+        &=h(X)+\log |a|
+    \end{align*}
+\end{proof}
+
+\begin{theorem}
+    $$h(AX)=h(X)+\log |\det A|,\forall A\in GL_n(\mathbb{R})$$
+\end{theorem}
+
+证明类似。
+
+在具有相同协方差矩阵的随机向量中，多元正态分布具有最大的微分熵：
+\begin{theorem}
+    设$X$为均值为$\mu$，协方差矩阵为$K=\mathbb{E}[(X-\mu)(X-\mu)^T]$的随机向量，则\begin{align*}
+        h(X)\leq \frac{1}{2}\log((2\pi e)^n|K|)
+    \end{align*}
+    取等$\iff X\sim N(\mu,K)$
+\end{theorem}
+\begin{proof}
+    不妨设$\mu=0$。设$g$为任意满足$\mathbb{E}[gg^T]=K$的多元正态分布的概率密度函数，$\phi_K\sim \mathcal{N}(0,K)$，则概率密度函数为\begin{align*}
+        \phi_K(\mathbf{x})=\frac{1}{(2\pi)^{n/2}|K|^{1/2}}\exp\left(-\frac{1}{2}\mathbf{x}^T K^{-1} \mathbf{x}\right)
+    \end{align*}
+    于是
+    \begin{align*}
+        0\leq D(g||\phi_K)&=\int g(\mathbf{x})\log \frac{g(\mathbf{x})}{\phi_K(\mathbf{x})}d\mathbf{x}\\
+        &=\int g(\mathbf{x})\log g(\mathbf{x})d\mathbf{x}-\int g(\mathbf{x})\log \phi_K(\mathbf{x})d\mathbf{x}\\
+        &=-h(g)+\frac{1}{2}\int g(\mathbf{x})\mathbf{x}^T K^{-1} \mathbf{x}d\mathbf{x}+\frac{1}{2}\log((2\pi)^n|K|)\\
+        &=-h(g)+\frac{1}{2}\text{tr}(K^{-1}K)+\frac{1}{2}\log((2\pi)^n|K|)\\
+        &=-h(g)+\frac{1}{2}\log((2\pi e)^n|K|)
+    \end{align*}
+    利用了例6.1.1.的结论。
+\end{proof}
+
+特别地，具有相同方差的随机变量中，正态分布具有最大的微分熵。
+
+由此可得与Fano不等式类似的估计：
+
+\begin{theorem}
+    设$X$微分熵为$h(X)(nat)$，常量$\hat{X}$为$X$的估计，则\begin{align*}
+        \mathbb{E} (X-\hat{X})^2\geq \frac{1}{2\pi e}e^{2h(X)}
+    \end{align*}
+    取等$\iff X$为正态分布且$\hat{X}=\mathbb{E} [X]$
+\end{theorem}
+\begin{proof}
+    \begin{align*}
+        \mathbb{E} (X-\hat{X})^2&\geq \mathbb{E} (X-\mathbb{E} [X])^2\\
+        &=\text{Var}(X)\\
+        &\geq \frac{1}{2\pi e}e^{2h(X)}
+    \end{align*}
+    最后一行是因为在具有相同方差的随机变量中，正态分布具有最大的微分熵，因此\begin{align*}
+        h(X)\leq \frac{1}{2}\log(2\pi e\text{Var}(X))
+    \end{align*}
+\end{proof}
+
+\begin{corollary}
+    当边信息Y以及估计$\hat{X}(Y)$已知时，有\begin{align*}
+        \mathbb{E} (X-\hat{X}(Y))^2\geq \frac{1}{2\pi e}e^{2h(X|Y)}
+    \end{align*}
+\end{corollary}
 
 \chapter{最后一页}
 
