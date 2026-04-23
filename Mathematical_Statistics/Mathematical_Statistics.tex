@@ -1,0 +1,143 @@
+\documentclass{ctexbook}
+\input{D:/Repository/Notebook_by_Leo_Yan/note-setup.tex}
+\usepackage{wrapfig}
+\usepackage{multicol}
+\usepackage{paracol}
+\usepackage{varwidth}
+\usepackage{dsfont}
+\usepackage{fix-cm}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{pifont}
+\usepackage{enumitem}
+\usepackage{circuitikz}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes,calc}
+\usepackage{standalone}
+\usepackage{silence}
+\usetikzlibrary{calc}
+\allowdisplaybreaks
+\raggedbottom
+\usetikzlibrary{shapes,arrows,positioning,calc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\graphicspath{{D:/Repository/Notebook_by_Leo_Yan/Figures/}}
+\let\cleardoublepage\clearpage
+\usepackage{url}
+
+\title{}
+\author{Leo Yan}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\clearpage
+\chapter{基本概念与统计模型}
+
+\section{基本概念}
+
+\begin{definition}
+    \textbf{总体}由与研究问题有关的所有个体组成。样本中的个体数目称为\textbf{样本大小}，抽取样本的行为称为\textbf{抽样}。
+
+    根据总体个数有限与无限，分为有限总体和无限总体。
+\end{definition}
+
+总体也可看作所有个体上某种数量指标的集合，可以用一个随机变量及其概率分布（总体分布）描述。当数量指标有多个时，用随机向量表示总体。
+
+\begin{definition}
+    样本$\mathbf{X}=(X_1,\cdots,X_n)$可能取值的全体，构成\textbf{样本空间}，记为$\mathcal{X}$。
+\end{definition}
+
+样本的两重性：既可看做随机变量（随机向量）（抽样前，Uppercase），又可看作确定的数（抽样后，lowercase）。
+
+简单随机抽样：(1)代表性：等概率抽选；(2)独立性：样本个体值不影响其他值。
+
+\begin{definition}[简单随机样本]
+    总体（分布）F中的容量为n的样本样本$X_1,\cdots,X_n$i.i.d.~F称为\textbf{简单随机样本}（简单样本/随机样本）。
+\end{definition}
+
+\section{统计推断}
+
+\begin{definition}
+    将出现在样本分布中的未知常数称为\textbf{参数（向量）}，如$N(a,\sigma^2)\to (a,\sigma^2)$.
+
+    参数的取值范围称为\textbf{参数空间}。
+\end{definition}
+
+\begin{definition}
+    样本分布包含未知参数时，参数取不同值的样本分布构成分部族：
+    $$\mathcal{F} =\{F_{\boldsymbol{\theta}},\boldsymbol{\theta}\in\boldsymbol{\Theta}\}\text{或}\mathcal{F} =\{f_{\boldsymbol{\theta}},\boldsymbol{\theta}\in\boldsymbol{\Theta}\}$$
+    其中$\boldsymbol{\Theta}\in\mathbb{R}^k$为参数空间。
+\end{definition}
+
+\begin{example}
+    指数分布$\mathrm{Exp}(\lambda)$的样本分布族为
+    $$\mathcal{F} =\{f_{\lambda}(x)=f(x,\lambda):\lambda>0\}$$
+\end{example}
+
+\begin{definition}
+    从总体中抽取一定大小的样本去推断总体的概率分布的方法称为\textbf{统计推断}(statistical inference)。当样本分布形式已知，而含有未知实参数时的统计推断问题称为\textbf{参数统计推断问题}，否则称为非参数统计推断问题。
+\end{definition}
+
+参数统计推断有多种，例如参数估计和假设检验。
+
+\section{统计量}
+
+\begin{definition}
+    由样本算出的量（样本的函数）称为\textbf{统计量}(statistic)。
+\end{definition}
+
+\begin{remark}
+    \begin{itemize}
+        \item 统计量只允许与样本有关而不允许与未知参数有关
+        \item 统计量也具有两重性
+    \end{itemize}
+\end{remark}
+
+几种常见统计量：
+\begin{definition}
+    设$X_1,\cdots,X_n$是从某总体X中抽取的样本，称
+    $$\bar{X}=\frac{1}{n}\sum_{i=1}^n X_i$$
+    为\textbf{样本均值}(sample mean). 称
+    $$S^2=\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2$$
+    为\textbf{样本方差}(sample variance).称
+    $$a_{n,k}=\frac{1}{n}\sum_{i=1}^n X_i^k,k=1,2,\cdots$$
+    为\textbf{样本k阶原点矩}，$a_{n,1}=\bar{X}$。称
+    $$m_{n,k}=\frac{1}{n}\sum_{i=1}^n (X_i-\bar{X})^k$$
+    为\textbf{样本k阶中心距}。
+\end{definition}
+
+\begin{proposition}
+    (1)$\sum_{i=1}^n (X_i-\bar{X})=0$
+
+    (2)设$a,b$为常数，$Y_i=aX_i+b$，则
+    $$\bar{Y}=a\bar{X}+b,S_Y^2=a^2 S_X^2$$
+
+    (3)$\forall \text{常数}c$，有
+    $$\sum_{i=1}^n(X_i-c)^2\ge\sum_{i=1}^n (X_i-\bar{X})^2$$
+    即均值是偏差平方最小准则下的最佳估计
+\end{proposition}
+
+\begin{definition}[二位随机向量的样本矩]
+    设$(X_1,Y_1),\cdots,(X_n,Y_n)$为二维样本$F(x,y)$中抽取的样本，则已定义$\bar{X},\bar{Y},S^2_X,S_Y^2$.
+    $$S_{XY}=\frac{1}{n}(X_i-\bar{X})(Y_i-\bar{Y})$$
+    称为X和Y的\textbf{样本协方差}(sample covariance).
+    $$r=\frac{\sum_{i=1}^n (X_i-\bar{X})(Y_i-\bar{Y})}{\sqrt{[(n-1)S_X^2]\cdot [(n-1)S_Y^2]}}$$
+    称为\textbf{样本相关系数}(sample covariance coefficient).
+\end{definition}
+
+\begin{definition}
+    设$X_1,\cdots,X_n$是从某总体F中抽取的样本，按大小排序为$X_{(1)},\cdots,X_{(n)}$，称$(X_{(1)},\cdots,X_{(n)})$是样本$(X_1,\cdots,X_n)$的\textbf{次序统计量}(order statistics).$(X_{(1)},\cdots,X_{(n)})$的一部分也可称为次序统计量。
+\end{definition}
+
+\chapter{抽样分布和数据的简化}
+
+\chapter{点估计}
+
+\chapter{区间估计}
+
+\chapter{参数假设检验}
+
+\end{document}
