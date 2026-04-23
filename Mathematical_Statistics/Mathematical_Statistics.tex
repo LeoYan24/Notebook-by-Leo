@@ -26,7 +26,7 @@
 \let\cleardoublepage\clearpage
 \usepackage{url}
 
-\title{}
+\title{数理统计}
 \author{Leo Yan}
 \date{\today}
 
@@ -68,12 +68,12 @@
 
 \begin{definition}
     样本分布包含未知参数时，参数取不同值的样本分布构成分部族：
-    $$\mathcal{F} =\{F_{\boldsymbol{\theta}},\boldsymbol{\theta}\in\boldsymbol{\Theta}\}\text{或}\mathcal{F} =\{f_{\boldsymbol{\theta}},\boldsymbol{\theta}\in\boldsymbol{\Theta}\}$$
-    其中$\boldsymbol{\Theta}\in\mathbb{R}^k$为参数空间。
+    $$\mathcal{F} =\{F_{\boldsymbol{\theta}},\boldsymbol{\theta}\in\Theta\}\text{或}\mathcal{F} =\{f_{\boldsymbol{\theta}},\boldsymbol{\theta}\in\Theta\}$$
+    其中$\Theta\in\mathbb{R}^k$为参数空间。
 \end{definition}
 
 \begin{example}
-    指数分布$\mathrm{Exp}(\lambda)$的样本分布族为
+    指数分布$\exp(\lambda)$的样本分布族为
     $$\mathcal{F} =\{f_{\lambda}(x)=f(x,\lambda):\lambda>0\}$$
 \end{example}
 
@@ -96,7 +96,8 @@
     \end{itemize}
 \end{remark}
 
-几种常见统计量：
+\subsection{常见统计量}
+
 \begin{definition}
     设$X_1,\cdots,X_n$是从某总体X中抽取的样本，称
     $$\bar{X}=\frac{1}{n}\sum_{i=1}^n X_i$$
@@ -120,7 +121,7 @@
     即均值是偏差平方最小准则下的最佳估计
 \end{proposition}
 
-\begin{definition}[二位随机向量的样本矩]
+\begin{definition}[二维随机向量的样本矩]
     设$(X_1,Y_1),\cdots,(X_n,Y_n)$为二维样本$F(x,y)$中抽取的样本，则已定义$\bar{X},\bar{Y},S^2_X,S_Y^2$.
     $$S_{XY}=\frac{1}{n}(X_i-\bar{X})(Y_i-\bar{Y})$$
     称为X和Y的\textbf{样本协方差}(sample covariance).
@@ -131,6 +132,128 @@
 \begin{definition}
     设$X_1,\cdots,X_n$是从某总体F中抽取的样本，按大小排序为$X_{(1)},\cdots,X_{(n)}$，称$(X_{(1)},\cdots,X_{(n)})$是样本$(X_1,\cdots,X_n)$的\textbf{次序统计量}(order statistics).$(X_{(1)},\cdots,X_{(n)})$的一部分也可称为次序统计量。
 \end{definition}
+
+\begin{definition}
+    \begin{itemize}
+        \item \textbf{样本中位数}(sample median)：$$m_{\frac{1}{2}}=\begin{cases}
+        X_{((n+1)/2)},n\text{为奇数}\\
+        \dfrac{1}{2}[X_{(n/2)}+X_{(n/2+1)}],n\text{为偶数}
+        \end{cases}$$
+        \item \textbf{样本p分位数}$(0<p<1)$(sample p-fractile)：$$X_{(m)},m=[(n+1)p]$$
+        \item \textbf{样本极值}(extremum of sample)：$X_{(1)},X_{(n)}$
+        \item \textbf{样本极差}(sample range)：$R=X_{(n)}-X_{(1)}$反映分散程度
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+    \textbf{样本变异系数}(sample coefficient of variation)与\textbf{总体变异系数}(population coefficient of variation)：$$\hat{\nu}=\frac{S_n}{\bar{Xt}},\nu=\frac{\sqrt{\mathrm{Var}(X)}}{\mathbb{E} (X)}$$
+    后者以总体均值为单位度量总体分布的分散程度，前者反映后者的信息。
+\end{definition}
+
+\begin{definition}
+    \textbf{样本偏度}(sample skewness):
+    $$\hat{\beta}_1=\frac{m_{n,3}}{m_{n,2}^{3/2}}=\frac{\sqrt{n}\sum_{i=1}^{n}(X_i-\bar{X})^3}{\left(\sum_{i=1}^n(X_i-\bar{X})^2\right)^{3/2}}$$
+    \textbf{总体偏度}(population skewness):
+    $$\beta_1=\frac{\mu_3}{\mu_2^{3/2}}$$
+    其中$\mu_k$为总体的k阶中心矩。
+
+    后者衡量总体分布的非对称性，前者反映后者的信息。
+\end{definition}
+
+\begin{definition}
+    \textbf{样本峰度}(sample kurtosis):
+    $$\hat{\beta}_2=\frac{m_{n,4}}{m_{n,2}^{2}}-3=\frac{n\sum_{i=1}^{n}(X_i-\bar{X})^4}{\left(\sum_{i=1}^n(X_i-\bar{X})^2\right)^{2}}-3$$
+    \textbf{总体峰度}(population kurtosis):
+    $$\beta_2=\frac{\mu_4}{\mu_2^{2}}-3$$
+    其中$\mu_k$为总体的k阶中心矩。
+
+    后者衡量概率密度函数在众数（最大值）附近尖锐程度，前者反映后者的信息。
+\end{definition}
+
+\subsection{经验分布函数}
+
+\begin{definition}
+    设有$F(x)$的次序统计量$X_{(1)},\cdots,X_{(n)}$，称函数
+    $$F_n(x)=\begin{cases}
+        0,x<X_{(1)}\\
+        \dfrac{k}{n},X_{(k)}\le x <X_{(k+1)},k=1,2,\cdots,n-1\\
+        1,X_{(n)}\le x
+    \end{cases}$$
+    为\textbf{经验分布函数}(empirical distribution function).
+\end{definition}
+
+经验分布函数单调不减、右连续，是$F(x)=\mathbb{P} (X\le x)$的统计量。
+
+定义\textbf{示性函数}
+$$I_A(x)=\begin{cases}
+    1,x\in A\\
+    0,otherwise
+\end{cases}$$
+则
+$$F_n(x)=\frac{1}{n}\sum_{i=1}^n I_{(-\infty,x]}(X_i)$$
+
+在时刻$x$以前，$X_i$发生了吗？
+\begin{align*}
+    Y_i(x)=I_{(-\infty,x]}(X_i)&\implies P(Y_i(x)=1)=F(x),Y_1,\cdots,Y_n \text{i.i.d.}\sim B(1,F(x))\\
+    &\implies nF_n(x)=sum_{i=1}^n Y_i\sim B(n,F(x))
+\end{align*}
+由此可得$F_n(x)$的大样本性质：
+\begin{theorem}
+    (1)由中心极限定理，
+    $$\frac{\sqrt{n}(F_n(x)-F(x))}{\sqrt{F(x)(1-F(x))}}\xrightarrow{\mathcal{L}}N(0,1),n\to\infty$$
+    其中$\xrightarrow{\mathcal{L}}$表示依分布收敛
+
+    (2)由Bernoulli（或辛钦）大数定律，
+    $$F_n(x)\xrightarrow{\mathbb{P}}F(x),n\to\infty$$
+
+    (3)由Borel大数定律，以概率1收敛（a.e.收敛）：
+    $$\mathbb{P} (\lim_{n\to\infty}F_n(x)=F(x))=1$$
+
+    (4)(Glivenko-Cantelli定理)用$D_n$衡量$F_n(x)$总体上靠近$F(x)$的程度：
+    $$D_n=\sup_{-\infty<x<\infty}|F_n(x)-F(x)|$$
+    则有
+    $$\mathbb{P} (\lim_{\to\infty}D_n=0)=1$$
+\end{theorem}
+
+\subsection{统计模型}
+
+一个问题的\textbf{统计模型}(statistical model)就是研究该问题时所抽样本的分布，又称概率模型，例如正态（分布）模型、泊松（分布）模型。
+
+\subsection{指数型分布族}
+
+\begin{definition}
+    设$\mathcal{F}=\{f(x,\boldsymbol{\theta}):\boldsymbol{\theta}\in\Theta\}$是定义在样本空间$\mathcal{X} $上的分布族，，若概率密度函数可以表示为以下形式：
+    $$f(x,\boldsymbol{\theta})=C(\boldsymbol{\theta})\exp\left[\sum_{i=1}^k Q_i(\boldsymbol{\theta})T_i(x)\right]h(x)$$
+    则称此分布族为\textbf{指数型分布族/指数族}(exponential family)，其中$k\in\mathbb{N}^*,C(\boldsymbol{\theta})>0,h(x)>0$.
+\end{definition}
+
+\begin{remark}
+    指数族中的所有概率密度函数$f(x,\boldsymbol{\theta})$的对$x$的支集必然不依赖于$\boldsymbol{\theta}$.
+\end{remark}
+
+\begin{definition}
+    如果指数族的概率密度函数有如下形式：
+    $$f(x,\boldsymbol{\theta})=C^*(\boldsymbol{\theta})\exp\left[\sum_{i=1}^k\theta_i T_i(x)\right]h(x)$$
+    则称它为指数族的\textbf{自然形式}(natural form)，此时集合
+    $$\Theta^*=\left\{(\theta_1,\cdots,\theta_k):\int_{\mathcal{X}}\exp\left[\sum_{i=1}^k\theta_i T_i(x)\right]h(x)\,ds<\infty\right\}$$
+    称为\textbf{自然参数空间}(natural parametric space).
+\end{definition}
+
+\begin{remark}
+    其中的参数组$\boldsymbol{\theta}$可能不是原分布中的参数组，而是令$\varphi_i=Q_i(\boldsymbol{\theta})$再改写符号$\boldsymbol{\varphi}$为$\boldsymbol{\theta}$.
+\end{remark}
+
+\begin{theorem}
+    指数族的自然形式下，自然参数空间为凸集。
+\end{theorem}
+
+\begin{theorem}
+    设指数族的自然形式下，自然参数空间有内点，记$\Theta_0=\mathrm{int}\Theta^*$.设实函数$g(x)$使得以下积分在$\Theta_0$内存在且有限：
+    $$G(\boldsymbol{\theta})=\int_{\mathcal{X} }g(x)\exp\left[\sum_{j=1}^k \theta_j T_j(x)\right]h(x)\,dx$$
+    则$G(\boldsymbol{\theta})$的任意偏导数存在且可以与积分号换序。
+\end{theorem}
+
+\subsection{贝叶斯模型}
 
 \chapter{抽样分布和数据的简化}
 
