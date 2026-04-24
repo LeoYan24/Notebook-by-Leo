@@ -195,7 +195,7 @@ $$F_n(x)=\frac{1}{n}\sum_{i=1}^n I_{(-\infty,x]}(X_i)$$
 在时刻$x$以前，$X_i$发生了吗？
 \begin{align*}
     Y_i(x)=I_{(-\infty,x]}(X_i)&\implies P(Y_i(x)=1)=F(x),Y_1,\cdots,Y_n \text{i.i.d.}\sim B(1,F(x))\\
-    &\implies nF_n(x)=sum_{i=1}^n Y_i\sim B(n,F(x))
+    &\implies nF_n(x)=\sum_{i=1}^n Y_i\sim B(n,F(x))
 \end{align*}
 由此可得$F_n(x)$的大样本性质：
 \begin{theorem}
@@ -215,11 +215,11 @@ $$F_n(x)=\frac{1}{n}\sum_{i=1}^n I_{(-\infty,x]}(X_i)$$
     $$\mathbb{P} (\lim_{\to\infty}D_n=0)=1$$
 \end{theorem}
 
-\subsection{统计模型}
+\section{统计模型}
 
 一个问题的\textbf{统计模型}(statistical model)就是研究该问题时所抽样本的分布，又称概率模型，例如正态（分布）模型、泊松（分布）模型。
 
-\subsection{指数型分布族}
+\section{指数型分布族}
 
 \begin{definition}
     设$\mathcal{F}=\{f(x,\boldsymbol{\theta}):\boldsymbol{\theta}\in\Theta\}$是定义在样本空间$\mathcal{X} $上的分布族，，若概率密度函数可以表示为以下形式：
@@ -253,7 +253,71 @@ $$F_n(x)=\frac{1}{n}\sum_{i=1}^n I_{(-\infty,x]}(X_i)$$
     则$G(\boldsymbol{\theta})$的任意偏导数存在且可以与积分号换序。
 \end{theorem}
 
-\subsection{贝叶斯模型}
+\section{贝叶斯模型}
+
+全概率+条件概率$\implies$
+\begin{theorem}[贝叶斯公式(Bayes formula)]
+    设$\{B_!,\cdots,B_n\}$是样本空间$\Omega$的完备事件群（分划），$A$为$\Omega$中的事件，且$\mathbb{P}(B_i)>0,\mathbb{P} (A)>0$，则
+    $$\mathbb{P}(B_i|A)=\frac{\mathbb{P} (A|B_i)\mathbb{P} (B_i)}{\mathbb{P} (A)}=\frac{\mathbb{P} (A|B_i)\mathbb{P} (B_i)}{\sum_{j=1}^n \mathbb{P}(A|B_j)(B_j)},i=1,\cdots,n$$
+\end{theorem}
+\begin{remark}
+    $\mathbb{P} (B_i)$为A未发生时对时间$B_i$发生可能性大小的估计，而$\mathbb{P} (B_i|A)$是在已知A发生后（新信息），对$B_i$的发生可能性大小的新的认识。
+
+    “结果”推“原因”：已知结果A，估计是哪一个原因导致A发生。
+\end{remark}
+
+统计推断使用的三种信息：\begin{itemize}
+    \item 总体信息
+    \item 样本信息
+    \item 先验信息：抽样之前有关统计推断问题中未知参数的一些信息
+\end{itemize}
+基于前两者：经典统计学；基于全部三者：Bayes统计学。
+
+\begin{definition}
+    参数空间$\Theta$上$\theta$的任一概率分布称为\textbf{先验分布}(prior distribution)，记为$\pi(\theta)$.
+\end{definition}
+
+\begin{definition}
+    在获得样本$\mathbf{X}=\mathbf{x}$后，$\theta$的\textbf{后验分布}(posterior distribution)记为$\pi(\theta|\mathbf{x})$，满足
+    $$\pi(\theta|\mathbf{x})=\frac{f(\mathbf{x},\theta)}{m(\mathbf{x})}=\frac{f(\mathbf{x}|\theta)\pi(\theta)}{\int_{\Theta}f(\mathbf{x}|\theta)\pi(\theta)\,d\theta}$$
+    其中$f(\mathbf{x}|\theta)$为样本$\mathbf{x}$的条件概率密度函数，$f(\mathbf{x},\theta)$为$\mathbf{X},\theta$的联合概率密度函数，$m(\mathbf{x})$是$\mathbf{X}$的边缘分布。离散情形下，这个公式就是Bayes公式。
+\end{definition}
+先验分布是抽取样本$\mathbf{X}$之前对参数$\theta$的认识，后验分布是抽取样本之后对$\theta$的认识。
+
+Bayes学派：对参数$\theta$的统计推断必须基于$\theta$的后验分布。
+
+先验分布的获取：\begin{itemize}
+    \item 主观概率
+    \item 无信息先验
+    \item 共轭先验
+\end{itemize}
+
+\subsection{无信息先验}
+
+$\Theta$有界时，无信息先验即均匀分布；$\Theta$无界时可以使用广义先验分布：
+
+\begin{definition}
+    设随机变量$X\sim f(x|\theta),\theta\in\Theta$，若$\theta$的先验密度$\pi(\theta)$满足\begin{enumerate}
+        \item $\pi(\theta)\ge 0$且$\int_{\Theta}\pi(\theta)\,d\theta=\infty$
+        \item 后验密度$\pi(\theta|x)$是概率密度函数
+        \end{enumerate}
+        则称$\pi(\theta)$为$\theta$的\textbf{广义（无信息）先验密度}(improper prior density).
+\end{definition}
+
+常取$\pi(\theta)\equiv 1$（乘以正常数无影响），此时
+$$\pi(\theta|\mathbf{x})=\frac{f(\mathbf{x}|\theta)}{\int_{\Theta}f(\mathbf{x}|\theta)\,d\theta}$$
+
+\textbf{位置参数族}：概率密度函数形如$f(x-\theta)$，$\theta$为位置参数。认为$X$与$Y=X+c$有相同的统计问题结构，于是有相同的无信息先验，此时$\pi(\theta)\equiv 1$.
+
+\textbf{刻度参数族}：总体分布族的密度函数形如$\sigma^{-1}\varphi(x/\sigma)$，$\sigma>0$为刻度参数认为$X$与$Y=cX(c>0)$有相同的统计问题结构，于是有相同的无信息先验，此时$\pi(\sigma)=1/\sigma$.
+
+\subsection{共轭先验}
+
+\begin{definition}
+    设$\mathcal{F}$表示又$\theta$的先验分布$\pi(\theta)$构成的分布族，如果$\forall \pi\in\mathcal{F} $及样本$\mathbf{x}$，后验分布$\pi(\theta|\mathbf{x})\in\mathcal{F}$，则称$\mathcal{F}$是一个\textbf{共轭先验分布族}(conjugate prior distribution family).
+\end{definition}
+
+共轭先验分布易于计算，并且其后验分布中一些参数可以得到很好的解释。
 
 \chapter{抽样分布和数据的简化}
 
