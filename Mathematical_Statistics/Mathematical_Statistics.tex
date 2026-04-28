@@ -26,6 +26,40 @@
 \let\cleardoublepage\clearpage
 \usepackage{url}
 
+%常数
+\DeclareMathOperator{\e}{e} 
+\DeclareMathOperator{\im}{i} 
+
+% 概率与统计基础
+\DeclareMathOperator{\Var}{Var}          % 方差
+\DeclareMathOperator{\Cov}{Cov}          % 协方差
+\DeclareMathOperator{\Corr}{Corr}        % 相关系数
+\DeclareMathOperator{\E}{\mathbb{E}}     % 期望
+\DeclareMathOperator{\Bias}{Bias}        % 偏倚
+\DeclareMathOperator{\MSE}{MSE}          % 均方误差
+\DeclareMathOperator{\RMSE}{RMSE}        % 均方根误差
+\DeclareMathOperator{\SD}{SD}            % 标准差（或直接使用 \sigma）
+\DeclareMathOperator{\SE}{SE}            % 标准误
+\DeclareMathOperator{\Med}{Med}          % 中位数
+\DeclareMathOperator{\Mode}{Mode}        % 众数
+\DeclareMathOperator{\IQR}{IQR}          % 四分位距
+\DeclareMathOperator{\Range}{Range}      % 极差
+\DeclareMathOperator{\Exp}{Exp} 
+
+% 常用统计缩写
+\newcommand{\iid}{\text{i.i.d.}}          % 独立同分布，带点
+\newcommand{\aee}{\text{a.e.}}             % 几乎处处
+%\newcommand{\as}{\text{a.s.}}             % 几乎必然（almost surely）
+\newcommand{\wpt}{\text{w.p.}}            % 以概率（with probability）
+\newcommand{\rv}{\text{r.v.}}             % 随机变量
+
+% 分布与特征函数
+\DeclareMathOperator{\Supp}{Supp}        % 支撑集
+\DeclareMathOperator{\MGF}{MGF}          % 矩母函数
+\DeclareMathOperator{\CF}{CF}            % 特征函数
+\DeclareMathOperator{\Logit}{Logit}      % Logit 变换
+\DeclareMathOperator{\Probit}{Probit}    % Probit 变换
+
 \title{数理统计}
 \author{Leo Yan}
 \date{\today}
@@ -320,6 +354,210 @@ $$\pi(\theta|\mathbf{x})=\frac{f(\mathbf{x}|\theta)}{\int_{\Theta}f(\mathbf{x}|\
 共轭先验分布易于计算，并且其后验分布中一些参数可以得到很好的解释。
 
 \chapter{抽样分布和数据的简化}
+
+\begin{definition}
+    \textbf{统计量}是样本的函数，原则上可由样本分布推出其概率分布，称之为\textbf{抽样分布}。
+\end{definition}
+
+给出抽样分布的封闭表达式，称为\textbf{精确抽样分布}，但通常难以求出，且躲在正态分布条件下得到；多数情况下研究\textbf{极限分布}，样本量大时近似精确分布。
+
+好的统计量能够简化数据，且信息无损失，此时称之为\textbf{充分统计量}。
+
+\section{正态总体的样本均值和样本方差的分布}
+
+\subsection{正态变量的线性组合}
+
+\begin{theorem}
+    设$X_1,\cdots,X_n$ i.i.d.$\sim N(a_k,\sigma_k^2)$，$c_1,\cdots,c_k$为常数，记$T=\sum_{k=1}^n c_k X_k$，则$T\sim N(\mu,\tau^2)$，其中$\mu=\sum_{k=1}^n c_k a_k,\tau^2=\sum_{k=1}^n c_k^2 \sigma^2_k$.
+\end{theorem}
+
+\begin{corollary}
+    设$a_1=\cdots=a_n=a,\sigma_1=\cdots=\sigma_n=\sigma$，则
+    $$T\sim N\left(a\sum_{k=1}^n c_k^2,\sigma^2\sum_{k=1}^n c_k^2\right)$$
+    令$c_1=\cdots=c_n=1/n$，则
+    $$T=\bar{X}\sim N\left(a,\frac{\sigma^2}{n}\right)$$
+\end{corollary}
+
+\begin{theorem}
+    设$X_1,\cdots,X_n$ i.i.d.$\sim N(a,\sigma^2)$，$\mathbf{Y}=A\mathbf{X}$，即
+    $$\begin{bmatrix}
+        Y_1\\
+        \vdots\\
+        Y_n
+    \end{bmatrix}=\begin{bmatrix}
+        a_{11} & \cdots & a_{1n}\\
+        \vdots & & \vdots \\
+        a_{n1} & \cdots & a_{nn}
+    \end{bmatrix}\begin{bmatrix}
+        X_1\\
+        \vdots\\
+        X_n
+    \end{bmatrix}$$
+    则\begin{enumerate}
+        \item $\mathbf{Y}$联合高斯，且
+        $$\E[Y_i]=a\sum_{k=1}^n a_{ik},\quad \Var(Y_i)=\sigma^2\sum_{k=1}^n a_{ik}^2,\quad \Cov(Y_i,Y_j)=\sigma^2\sum_{k=1}^n a_{ik}a_{jk}$$
+        \item 特别地，如果$A$是单位正交阵，则$Y_1,\cdots,Y_n$ i.i.d.$\sim N(\mu_i,\sigma^2)$，其中$\mu_i=a\sum_{k=1}^n a_{ik}$.进一步，$a=0$时$Y_1,\cdots,Y_n\iid \sim N(0,\sigma^2)$
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}
+    设$X_1,\cdots,X_n$ i.i.d.$\sim N(a,\sigma^2)$，则\begin{enumerate}
+        \item $\bar{X}\sim N(a,\sigma^2)$
+        \item $\dfrac{(n-1)S^2}{\sigma^2}\sim \chi_{n-1}^2$
+        \item $\bar{X}$与$S^2$独立
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    1.显然。对2，令单位正交阵
+    $$A=\begin{bmatrix}
+        \dfrac{1}{\sqrt{n}} & \cdots & \dfrac{1}{\sqrt{n}}\\
+        a_{21} & \cdots & a_{2n}\\
+        \vdots & & \vdots\\
+        a_{n1} & \cdots & a_{nn}
+    \end{bmatrix}$$
+    则有$$Y_1=\frac{1}{\sqrt{n}}\sum_{k=1}^n X_k=\sqrt{n}\bar{X}$$
+    $$\sum_{k=1}^n Y_k^2=\sum_{k=1}^n X_k^2$$
+    因此
+    $$(n-1)S^2=\sum_{k=1}^n (X_k-\bar{X})^2=\sum_{k=1}^n X_k^2-n\bar{X}^2=\sum_{k=1}^n Y_k^2-Y_1^2=\sum_{k=2}^n Y_k^2$$
+    而$Y_1,\cdots,Y_n\iid\sim N(\mu_k,\sigma^2)$，其中$\mu_i=a\sum_{k=1}^n a_{ik}$，根据$A$的行向量的正交性知$\mu_k=0$，因此
+    $$\frac{(n-1)S^2}{\sigma^2}=\sum_{k=2}^n \left(\frac{Y_k}{\sigma}\right)^2\sim \chi_{n-1}^2$$
+
+    对3，$\bar{X}$只与$Y_1$有关，$S^2$只与$Y_2,\cdots,Y_n$有关，得证。
+\end{proof}
+
+\section{卡方分布，t分布和F分布}
+
+\subsection{卡方分布}
+
+\begin{definition}
+    设$X_1,\cdots,X_n$ i.i.d.$\sim N(0,1)$，称
+    $$\xi=\sum_{k=1}^n X_k^2$$
+    是自由度为n的\textbf{$\chi^2$变量}，其分布称为自由度为n的\textbf{$\chi^2$分布}。
+\end{definition}
+
+\begin{theorem}
+    设$\xi\sim \chi_{n}^2$，则其概率密度函数为
+    $$g_n(x)=\frac{1}{2^{n/2}\Gamma(n/2)}x^{n/2-1}\e^{-x/2},x>0$$
+    即$\chi_{n}^2=\Gamma(\frac{n}{2},\frac{1}{2})$.
+\end{theorem}
+自由度越大，$\chi_n^2$的概率密度曲线越由“偏左”趋于“对称”（极限为正态分布）；$n=1,2$单调递减，$n\ge 3$有单峰。
+
+将$\chi_n^2$分布的上侧$\alpha(0<\alpha<1)$分位数记为$c=\chi_{n}^2(\alpha)$，它满足$\xi\sim\chi_n^2,\mathbb{P}(\xi>c)=\alpha$，通常取较小的值。
+
+\begin{proposition}[$\chi^2$变量的性质]
+    设\rv $\xi\sim\chi_n^2$，则
+    \begin{enumerate}
+        \item $\xi$的特征函数为$\varphi(t)=(1-2\im t)^{-n/2}$，矩母函数为$\phi(t)=(1-2t)^{-n/2}$.
+        \item $\E(\xi)=n,\Var(\xi)=2n$.
+        \item 设$Y\sim\Gamma(\alpha,\lambda)$，则$Z=2\lambda Y\sim\chi_{2n}^2$.
+        \item 设$Z_i\iid\sim \chi_{n_i}^2$，则$\sum_{i=1}^k Z_i\sim \chi_{n_1+\cdots+n_k}^2$.
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    利用$\Gamma(n,\lambda)$的矩母函数为$\left(\dfrac{\lambda}{\lambda-t}\right)^n$可得。
+\end{proof}
+
+\subsection{t分布}
+
+\begin{definition}
+    设$\rv X\sim N(0,1),Y\sim \chi_n^2$且两者独立，称
+    $$T=\frac{X}{\sqrt{Y/n}}$$
+    为自由度为n的\textbf{t变量}，其分布称为自由度为n的\textbf{t分布},记为$t_n$。
+\end{definition}
+
+\begin{theorem}
+    设$\rv T\sim t_n$，则其概率密度函数为
+    $$t_n(x)=\frac{\Gamma(\frac{n+1}{2})}{\Gamma(\frac{n}{2})\sqrt{n\pi}}\left(1+\frac{x^2}{n}\right)^{-\frac{n+1}{2}}$$
+\end{theorem}
+
+$t_n$类似标准正态分布$N(0,1)$，为单峰偶函数，在$x=0$处取最大值，但是峰值相对低、尾部相对粗，$n$越大越接近$N(0,1)$.
+
+将$t_n$分布的双侧上$\alpha(0<\alpha<1)$分位数记为$c=t_n(\alpha)$，它满足$T\sim t_n,\mathbb{P}(T>c)=\alpha$。
+
+\begin{proposition}[$t_n$变量的性质]
+    设$\rv T\sim t_n$，则\begin{enumerate}
+        \item $\E[T^r]$仅当$r<n$时存在，且
+        $$\E[T^r]=\begin{cases}
+            n^{r/2}\dfrac{\Gamma(\frac{r+1}{2})\Gamma(\frac{n-r}{2})}{\Gamma(\frac{n}{2})\Gamma(\frac{1}{2})},r\text{为偶数}\\
+            0,r\text{为奇数}
+        \end{cases}$$
+        特别地，$n\ge 2$时,$\E[T]=0$；$n\ge 3$时，$\Var(T)=\dfrac{n}{n-2}$
+        \item $t_1$就是柯西分布：$t_1(x)=\dfrac{1}{\pi(1+x^2)}$
+        \item $\lim_{n\to\infty}t_n=N(0,1)$.
+    \end{enumerate}
+\end{proposition}
+
+\subsection{F分布}
+
+\begin{definition}
+    设$\rv X\sim \chi_m^2,Y\sim\chi_n^2$且两者独立，则称
+    $$F=\frac{X/m}{Y/n}$$
+    是自由度为m和n的\textbf{F变量}，其分布函数称为自由度为m和n的\textbf{F分布}，记为$F\sim F_{m,n}$.
+\end{definition}
+
+\begin{theorem}
+    $\rv Z\sim F_{m,n}$的概率密度函数为
+    $$f_{m,n}(x)=B\left(\frac{m}{2},\frac{n}{2}\right)m^{\frac{m}{2}}n^{\frac{n}{2}}x^{\frac{m}{2}-1}(n+mx)^{-\frac{m+n}{2}},x>0$$
+\end{theorem}
+
+自由度m,n有序；$f_{m,n}(x)$是偏态的，m一定,n越小，偏态越严重。
+
+将$F_{m,n}$分布的上侧$\alpha(0<\alpha<1)$分位数记为$c=F_{m,n}(\alpha)$，它满足$F\sim F_{m,n},\mathbb{P}(F>c)=\alpha$。
+
+\begin{proposition}[F变量的性质]
+    设$Z\sim F_{m,n}$，则\begin{enumerate}
+        \item $1/Z\sim F_{n,m}$
+        \item $\forall 0<r<\dfrac{n}{2}$，有$$\E[Z^r]=\left(\frac{n}{m}\right)^r\frac{\Gamma(\frac{m}{2}+r)\Gamma(\frac{n}{2}-r)}{\Gamma(\frac{n}{2})\Gamma(\frac{m}{2})}$$
+        特别地，$$\E[Z]=\frac{n}{n-2},n>2,\quad \Var(Z)=\frac{2n^2(m+n-2)}{m(n-2)^2(n-4)},n>4$$
+        \item 若$T\sim t_m$，则$T^2\sim F_{1,m}$
+        \item $F_{m,n}(1-\alpha)=\dfrac{1}{F_{n,m}(\alpha)}$
+    \end{enumerate}
+\end{proposition}
+
+\subsection{几个重要推论}
+
+\begin{corollary}
+    设$X_1,\cdots,X_n$ i.i.d.$\sim \Exp(\lambda)$，则
+    $$2\lambda n\bar{X}=2\lambda\sum_{k=1}^n X_k\sim\chi_{2n}^2$$
+\end{corollary}
+\begin{proof}
+    易证$2\lambda X_k\sim \chi_2^2$，利用$\chi^2$分布的性质4即证。
+\end{proof}
+
+\begin{corollary}
+    设$$\mathbf{X}=(X_1,\cdots,X_n)^T\sim N_n(\boldsymbol{\mu}_{n\times 1},\Sigma_{n\times n})$$
+    其中$\Cov(\mathbf{X})=\Sigma>0$（正定），则$$U=(\mathbf{X}-\boldsymbol{\mu})^T\Sigma^{-1}(\mathbf{X}-\boldsymbol{\mu})\sim \chi_n^2$$
+\end{corollary}
+\begin{proof}
+    $\mathbf{Y}=\Sigma^{-1/2}(\mathbf{X}-\boldsymbol{\mu})\sim N_n(\mathbf{0},I)$，其中$\Sigma=O\Lambda O^T,\Sigma^{-1/2}=O\Lambda^{-1/2}O^T$，它将多元正态分布\textbf{白化}（球化）.
+
+    由$\chi^2$分布的定义可知$U=\mathbf{Y}^T\mathbf{Y}=\sum_{k=1}^n Y_k^2\sim \chi_n^2$.
+\end{proof}
+
+\begin{corollary}
+    设$X_1,\cdots,X_n\iid\sim N(a,\sigma^2)$，则
+    $$T=\frac{\sqrt{n}(\bar{X}-a)}{S}\sim t_{n-1}$$
+\end{corollary}
+\begin{proof}
+    $\bar{X}\sim N(a,\sigma^2/n)$，将其标准化：
+    $$\frac{\sqrt{n}(\bar{X}-a)}{\sigma}\sim N(0,1)$$
+    又知
+    $$\frac{(n-1)S^2}{\sigma^2}\sim \chi_{n-1}^2,\text{即}\frac{S^2}{\sigma^2}\sim\frac{\chi_{n-1}^2}{n-1}$$
+    得到
+    $$T=\frac{\sqrt{n}(\bar{X}-a)/\sigma}{\sqrt{S^2/\sigma^2}}=\frac{\sqrt{n}(\bar{X}-a)}{S}\sim t_{n-1}$$
+\end{proof}
+
+\begin{corollary}
+    设$X_1,\cdots,X_m\iid\sim N(a_1,\sigma^2),Y_1,\cdots,Y_n\iid\sim N(a_2,\sigma^2)$，且$X,Y$相互独立，则
+    $$T_{\omega}=\frac{(\bar{X}-a_1)-(\bar{Y}-a_2)}{S_w}\cdot\sqrt{\frac{mn}{m+n}}\sim t_{n+m-2}$$
+    其中
+    $$(n+m-2)S_w^2=(m-1)S_X^2+(n-1)S_Y^2$$
+\end{corollary}
+
+\begin{corollary}
+    设$X_1,\cdots,X_m\iid\sim N(a_1,\sigma_1^2),Y_1,\cdots,Y_n\iid\sim N(a_2,\sigma_2^2)$，且$X,Y$相互独立，则
+    $$F=\frac{S_X^2}{S_Y^2}\cdot\frac{\sigma_2^2}{\sigma_1^2}\sim F_{m-1,n-1}$$
+\end{corollary}
 
 \chapter{点估计}
 
