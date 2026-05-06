@@ -289,13 +289,13 @@
     等价定义：给定T(X)，X与$\theta$条件独立，即$\theta \to T(X) \to X$
 \end{definition}
 
-\begin{definition}[最小充分统计量]
-    关于分布族$\{f_{\theta}(x)\}$的充分统计量T(X)是其他任何充分统计量$U(X)$的函数，则称T(X)为关于$\{f_{\theta}(x)\}$的\textbf{最小充分统计量}(minimal sufficient statistic)
+\begin{definition}[极小充分统计量]
+    关于分布族$\{f_{\theta}(x)\}$的充分统计量T(X)是其他任何充分统计量$U(X)$的函数，则称T(X)为关于$\{f_{\theta}(x)\}$的\textbf{极小充分统计量}(minimal sufficient statistic)
     
-    定义蕴含$\theta \to T(X) \to U(X) \to X$
+    定义蕴含$\theta \to U(X) \to T(X) \to X$
 \end{definition}
 \begin{remark}
-    最小充分统计量最大程度地压缩了样本X中关于$\theta$的信息，而其他充分统计量可能包含冗余信息
+    极小充分统计量最大程度地压缩了样本X中关于$\theta$的信息，而其他充分统计量可能包含冗余信息。极小充分统计量未必是唯一的。
 \end{remark}
 
 由随机变量Y估计与之有关的X，X的估计值记为$\hat{X}=g(Y)$取值空间为$\hat{\mathcal{X}}$，则有马尔可夫链

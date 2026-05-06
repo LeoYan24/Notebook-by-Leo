@@ -554,11 +554,192 @@ $t_n$类似标准正态分布$N(0,1)$，为单峰偶函数，在$x=0$处取最�
     其中
     $$(n+m-2)S_w^2=(m-1)S_X^2+(n-1)S_Y^2$$
 \end{corollary}
+（证明略）
 
 \begin{corollary}
     设$X_1,\cdots,X_m\iid\sim N(a_1,\sigma_1^2),Y_1,\cdots,Y_n\iid\sim N(a_2,\sigma_2^2)$，且$X,Y$相互独立，则
     $$F=\frac{S_X^2}{S_Y^2}\cdot\frac{\sigma_2^2}{\sigma_1^2}\sim F_{m-1,n-1}$$
 \end{corollary}
+（证明略）
+
+\section{次序统计量的分布}
+
+\subsection{次序统计量的分布}
+
+\begin{lemma}
+    设总体$X$的分布函数为$F(x)$，密度函数为$f(x)$，$X_1,\cdots,X_n$为简单样本，则有
+    $$\idotsint_{a<x_1<\cdots<x_n<b}f(x_1)\cdots f(x_n)dx_1\cdots dx_n=\frac{1}{n!}[F(b)-F(a)]^n,-\infty\le a<b\le \infty$$
+\end{lemma}
+
+\begin{theorem}[次序统计量的分布]
+    设$X_1,\cdots,X_n\iid\sim F$，有概率密度函数$f$，$(X_{(1)},\cdots,X_{(n)})$为次序统计量。记$Y_i=X_{(i)}$，则次序统计量的联合密度为
+    $$g(y_1,\cdots,y_n)=\begin{cases}
+        n!f(y_1)\cdots f(y_n),&\text{if }y_1<\cdots<y_n\\
+        0,&\text{otherwise}
+    \end{cases}$$
+\end{theorem}
+\begin{proof}
+    $\Supp g$显然是$y_1<\cdots<y_n$.每个$g(y_1,\cdots,y_n)$对应$n!$种排列方式导致的$n!$种情况。
+\end{proof}
+
+\begin{theorem}[两个次序统计量的联合分布]
+    设$X_1,\cdots,X_n\iid\sim F$，有概率密度函数$f$，$(X_{(1)},\cdots,X_{(n)})$为次序统计量，则其中任意二者$(X,Y)=(X_{(i)},X_{(j)})(i<j)$的联合密度为
+    $$f_{ij}(x,y)=\begin{cases}
+        \dfrac{n!f(x)f(y)}{(i-1)!(j-i-1)!(n-j)!}F^{i-1}(x)(F(y)-F(x))^{j-i-1}(1-F(y))^{n-j},&\text{if }x<y\\
+        0,&\text{otherwise}
+    \end{cases}$$
+\end{theorem}
+\begin{proof}
+    $f_{ij}(x,y)$是$g(y_1,\cdots,y_n)$的边缘分布。将积分分离变量如下：
+    \begin{align*}
+        f_{ij}(x,y)=&n!f(x)f(y)\idotsint_{-\infty<x_1<\cdots<x_{i-1}<x}f(x_1)\cdots f(x_{i-1})\,dx_1\cdots dx_{i-1}\\
+        &\times \idotsint_{x<x_{i+1}<\cdots<x_{j-1}<y}f(x_{i+1})\cdots f(x_{j-1})\,dx_{i+1}\cdots dx_{j-1}\\
+        &\times\idotsint_{y<x_{j+1}<\cdots<x_n<\infty}f(x_{j+1})\cdots f(x_n)\,dx_{j+1}\cdots dx_n
+    \end{align*}
+    利用lemma2.3.1，得到\begin{align*}
+        f_{ij}(x,y)=n!f(x)f(y)\cdot\frac{F^{i-1}(x)}{(i-1)!}\cdot\frac{[F(y)-F(x)]}{(j-i-1)!}\cdot\frac{[1-F(y)]^{n-j}}{(n-j)!}
+    \end{align*}
+\end{proof}
+
+类似可求任意个次序统计量的联合分布。
+
+\begin{theorem}[单个次序统计量的分布]
+    设$X_1,\cdots,X_n\iid\sim F$，有概率密度函数$f$，$(X_{(1)},\cdots,X_{(n)})$为次序统计量，则$X=X_{(m)}$的概率密度函数为
+    $$f_m(x)=m\binom{n}{m}F^{m-1}(x)[1-F(x)]^{n-m}f(x)$$
+    分布函数为
+    $$F_m(x)=m\binom{n}{m}\int_{0}^{F(x)}t^{m-1}(1-t)^{n-m}\,dt$$
+    特别地，令$m=1$得到样本极小值的概率密度函数：
+    $$f_1(x)=n(1-F(x))^{n-1}f(x)$$
+    令$m=n$得到样本极大值的概率密度函数：
+    $$f_n(x)=nF^{n-1}(x)f(x)$$
+\end{theorem}
+
+\subsection{极差的分布}
+
+极差$R=X_{(n)}-X_{(1)}$.令\begin{align*}
+    \begin{cases}
+        Z=X_{(1)}\\
+        R=X_{(n)}-X_{(1)}
+    \end{cases}\iff\begin{cases}
+        X_{(1)}=Z\\
+        X_{(n)}=Z+R
+    \end{cases}
+\end{align*}
+
+则雅可比行列式
+$$J=\left|\frac{\partial(X_{(1)},X_{(n)})}{\partial(Z,R)}\right|=1$$
+因此\begin{align*}
+    g(z,r)&=Jf_{ij}(z,z+r)\\
+    &=\begin{cases}
+        n(n-1)[F(z+r)-F(z)]^{n-2}f(z+r)f(z),&r>0\\
+        0,&r\le 0
+    \end{cases}
+\end{align*}
+
+求边缘分布即得$R$的概率密度函数为
+$$g_R(r)=\int_{-\infty}^{\infty}g(z,r)\,dz$$
+
+\subsection{均匀分布情形}
+
+令$X_1,\cdots,X_n\iid\sim U(0,1)$，则
+$$f_m(x)=m\binom{n}{m}x^{m-1}(1-x)^{n-m}I_{(0,1)}(x)$$
+$$f_{ij}(x,y)=\begin{cases}
+    \dfrac{n!}{(i-1)!(j-i-1)!(1-y)!}x^{i-1}(y-x)^{j-i-1}(1-y)^{n-j},&0<x<y<1\\
+    0,&\text{otherwise}
+\end{cases}$$
+$(X_{(1)},\cdots,X_{(n)})$的联合概率密度函数为
+$$f(x_{(1)},\cdots,x_{(n)})=n!,0<x_{(1)}<\cdots<x_{(n)}<1$$
+极差的概率密度函数为
+$$g_R(r)=n(n-1)r^{n-2}(1-r)I_{(0,1)}$$
+
+\section{统计量的极限分布}
+
+\begin{definition}[极限分布/大样本分布]
+    如果样本容量$n\to\infty$时的统计量分布趋于一确定分布，则该分布称为统计量的\textbf{极限分布/大样本分布}。
+\end{definition}
+\begin{definition}[大样本性质/小样本性质]
+    样本容量$n\to\infty$时的统计量或统计推断方法的性质称为\textbf{大样本性质}；当样本容量固定时称为\textbf{小样本性质}。    
+\end{definition}
+
+\begin{example}[强相合性]
+    设$X_1,\cdots,X_n\iid\sim F$，其中总体$F$均值为$a$，方差为$\sigma^2<\infty$，样本均值为
+    $$\bar{X}_n=\frac{1}{n}\sum_{i=1}^n X_i$$
+    由Kolmogorov强大数定律，有
+    $$\mathbb{P} (\lim_{n\to\infty}\bar{X}_n=a)=1\iff \bar{X}_n\xrightarrow{\aee}a$$
+    该性质称为$\bar{X}_n$的\textbf{强相合性}，为大样本性质。
+\end{example}
+
+\begin{example}
+    假设同上，由Lindeberg中心极限定理，
+    $$\frac{\sqrt{n}(\bar{X}_n-a)}{\sigma}\xrightarrow{\mathcal{L} }N(0,1)$$
+    其中$\xrightarrow{\mathcal{L} }$表示依分布收敛。该性质称为$\bar{X}_n$的\textbf{渐近正态性}，为大样本性质。
+\end{example}
+
+\begin{example}
+    假设同上，$\E[\bar{X}_n]=a$称为$\bar{X}_n$的\textbf{无偏性}，为小样本性质。
+\end{example}
+
+\section{充分统计量}
+
+\textbf{充分性原则}：如果$T(\mathbf{X})$为参数$\theta$的充分统计量，则依赖样本$\mathbf{X}$对$\theta$做的任何统计推断都可以仅通过统计量$T(\mathbf{X})$进行，而不会损失关于$\theta$的信息。
+
+\begin{definition}[充分统计量]
+    设样本$\mathbf{X}$的分布族为$\{f(\mathbf{x},\theta),\theta\in\Theta\}$。如果已知统计量$T=T(\mathbf{X})$的条件下，样本$\mathbf{X}$的条件分布与参数$\theta$无关，即$\forall\text{事件}A,\mathbb{P}_{\theta}(\mathbf{X}\in A|T=t)$与$\theta$无关，则称$T(\mathbf{X})$为$\theta$的\textbf{充分统计量}(sufficient statistic)。
+\end{definition}
+\begin{remark}
+    这是充分统计量不依赖于信息论的等价定义形式，相当于说$\theta\to T(\mathbf{X})\to\mathbf{X}$构成Markov链。
+\end{remark}
+
+以下定理给出了较为简便的充分统计量判则：
+\begin{theorem}[因子分解定理]
+    设样本$\mathbf{X}=(X_1,\cdots,X_n)\sim f(\mathbf{x},\theta)$统计量$T(\mathbf{X})$是充分统计量$\iff f(\mathbf{x},\theta)$可分解为以下形式：
+    $$f(\mathbf{x},\theta)=g(\mathbf{T(x)},\theta)h(\mathbf{x})$$
+\end{theorem}
+直观：给定$\mathbf{t(x)}$，$f(\mathbf{x},\theta)$就可以由$h(\mathbf{x})$归一化获得。
+
+\begin{corollary}
+    设$\mathbf{T}=\mathbf{T}(\mathbf{X})$是$\theta$的充分统计量，$S=\varphi(\mathbf{T})$是可逆函数，则$S=\varphi(\mathbf{T})$也是$\theta$的充分统计量。
+\end{corollary}
+可逆函数表明$S\rightleftarrows T$，它们一定含有相同的信息。
+
+\begin{definition}[极小充分统计量]
+    关于分布族$\{f_{\theta}(x)\}$的充分统计量T(X)是其他任何充分统计量$S(X)$的函数，则称$T(X)$为关于$\{f_{\theta}(x)\}$的\textbf{极小充分统计量}(minimal sufficient statistic)
+    
+    定义蕴含$\theta \to S(X) \to T(X) \to X$
+\end{definition}
+
+\begin{theorem}
+    设样本$\mathbf{X}=(X_1,\cdots,X_n)$的概率密度函数为$f(\mathbf{x},\boldsymbol{\theta}),x\in\mathcal{X} ,\boldsymbol{\theta}\in\boldsymbol{\Theta}$.对于充分统计量$\mathbf{T}(\mathbf{x})$，如果对任意两个样本点$\mathbf{x},\mathbf{y}$，
+    $$\frac{f(\mathbf{x},\boldsymbol{\theta})}{f(\mathbf{y},\boldsymbol{\theta})}\text{为与}\theta\text{无关的常数}\iff \mathbf{T}(\mathbf{x})=\mathbf{T}(\mathbf{y})$$
+    则$\mathbf{T}(\mathbf{x})$是$\boldsymbol{\theta}$的极小充分统计量。
+\end{theorem}
+\begin{proof}
+    要证：任一其他充分统计量$\mathbf{T}^*(\mathbf{X})$，$\mathbf{T}(\mathbf{X})$都是$\mathbf{T}^*(\mathbf{X})$的函数。
+
+    根据银子分解定理，存在$g^*,h^*$使得
+    $$f(\mathbf{x},\theta)=g^*(\mathbf{T^*(x)},\theta)h^*(\mathbf{x})$$
+    令样本点$\mathbf{x},\mathbf{y}\in\mathcal{X}$满足$\mathbf{T}^*(\mathbf{x})=\mathbf{T}^*(\mathbf{y})$，则
+    $$\frac{f(\mathbf{x},\theta)}{f(\mathbf{y},\theta)}=\frac{g^*(\mathbf{T}^*(\mathbf{x}),\theta)h^*(\mathbf{x})}{g^*(\mathbf{T}^*(\mathbf{y}),\theta)h^*(\mathbf{y})}=\frac{h^*(\mathbf{x})}{h^*(\mathbf{y})}$$
+    与$\theta$无关，因此$\mathbf{T}(\mathbf{x})=\mathbf{T}(\mathbf{y})$，也就是说
+    $$\mathbf{T}^*(\mathbf{x})=\mathbf{T}^*(\mathbf{y})\implies \mathbf{T}(\mathbf{x})=\mathbf{T}(\mathbf{y})$$
+    因此以下函数是良定义的：
+    $$\varphi:\mathbf{T}^*(\mathbf{x})\mapsto\mathbf{T}(\mathbf{x}),\forall \mathbf{x}\in\mathcal{X}$$
+\end{proof}
+\begin{remark}
+    我们只用到了
+    $$\frac{f(\mathbf{x},\boldsymbol{\theta})}{f(\mathbf{y},\boldsymbol{\theta})}\text{为与}\theta\text{无关的常数}\implies \mathbf{T}(\mathbf{x})=\mathbf{T}(\mathbf{y})$$
+    但这不影响定理表述的正确性，因为根据因此分解定理，$\impliedby$是自动成立的。
+\end{remark}
+
+\begin{proposition}
+    根据指数族的性质可以得到：
+    \begin{enumerate}
+        \item 二项分布$B(m,\theta)$中，$\theta$的极小充分统计量为$\sum_{i=1}^n X_i$或$\bar{X}$
+        \item Poisson分布$P(\lambda)$中，$\lambda$的极小充分统计量为$\sum_{i=1}^n X_i$或$\bar{X}$
+        \item 正态分布$N(\mu,\sigma^2)$中，$\mathbf{T}(\mathbf{X})=\left(\sum_{i=1}^n X_i,\sum_{i=1}^n X_i^2\right)$或$\mathbf{T}(\mathbf{X})=\left(\bar{X},S^2\right)$为$(\mu,\sigma^2)$的极小充分统计量
+        \item Gamma分布$\Gamma(r,\lambda)$中，$\mathbf{T}(\mathbf{X})=\left(\sum_{i=1}^n X_i,\sum_{i=1}^n \ln(X_i)\right)$为$(r,\lambda)$的极小充分统计量
+    \end{enumerate}
+\end{proposition}
 
 \chapter{点估计}
 
