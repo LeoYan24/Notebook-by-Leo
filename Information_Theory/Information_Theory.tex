@@ -663,7 +663,7 @@ $$H(X|Y)=\E[I[P(x_i|y_j)]]$$
     在$l_i\in\mathbb{N} ,\sum D^{-l_i}\leq 1$的条件下，求$\min L(C)$.
 
     不考虑$l_i\in\mathbb{N}$.$\Omega=\{\mathbf{x}\in\mathbb{R}^m:\sum D^{-l_i}\leq 1\}$是凸集，因为$\forall \mathbf{x},\mathbf{y}\in\Omega$，由H$\ddot{o}$lder不等式，
-    \[sum_i D^{-\lambda x_i-(1-\lambda)y_i}\leq \left(\sum_i D^{-x_i}\right)^{\lambda}\left(\sum_i D^{-y_i}\right)^{1-\lambda}\leq 1,\forall 0<\lambda<1\]
+    \[\sum_i D^{-\lambda x_i-(1-\lambda)y_i}\leq \left(\sum_i D^{-x_i}\right)^{\lambda}\left(\sum_i D^{-y_i}\right)^{1-\lambda}\leq 1,\forall 0<\lambda<1\]
 
     用拉乘法求$\min_{\mathbf{x}\in\Omega}L(C)$.令
     \[J(l_1,\cdots,l_m,\lambda)=\sum_i p_i l_i+\lambda\left(\sum_i D^{-l_i}-1\right)\]

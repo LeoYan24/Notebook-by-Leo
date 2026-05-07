@@ -116,7 +116,7 @@
     从总体中抽取一定大小的样本去推断总体的概率分布的方法称为\textbf{统计推断}(statistical inference)。当样本分布形式已知，而含有未知实参数时的统计推断问题称为\textbf{参数统计推断问题}，否则称为非参数统计推断问题。
 \end{definition}
 
-参数统计推断有多种，例如参数估计和假设检验。
+参数统计推断有多种，例如参数估计和假设检验。参数估计问题通常分为两类：\textbf{点估计}和\textbf{区间估计}，前者估计参数（或参数的函数）的值，后者给出取值范围。
 
 \section{统计量}
 
@@ -742,6 +742,100 @@ $$g_R(r)=n(n-1)r^{n-2}(1-r)I_{(0,1)}$$
 \end{proposition}
 
 \chapter{点估计}
+
+\section{点估计与估计优劣的评价}
+
+\begin{definition}[点估计]
+    设$\mathbf{X}=(X_1,\cdots,X_n)$为从某个总体$F_\theta$中抽取的样本，$g(\theta)$为总体参数$\theta$的实函数，用$\hat{g}(\mathbf{X})$作为$g(\theta)$的\textbf{估计量}(estimator)，称为\textbf{点估计}(point estimation)，在一组具体的样本值$\mathbf{x}=(x_1,\cdots,x_n)$下，$\hat{g}(\mathbf{x})$称为$g(\theta)$的\textbf{估计值}。
+\end{definition}
+
+\subsection{无偏性}
+
+\begin{definition}[无偏估计]
+    设$\mathbf{X}=(X_1,\cdots,X_n)$为总体$\{F_\theta,\theta\in\Theta\}$中抽取的样本，$\hat{g}_n(\mathbf{X})$是$g(\theta)$的一个估计量。如果
+    $$\E_\theta[\hat{g}_n(\mathbf{X})]=g(\theta),\theta\in\Theta$$
+    则称$\hat{g}_n(\mathbf{X})$是$g(\theta)$的一个\textbf{无偏估计}(unbiased estimation)；如果
+    $$\lim_{n\to\infty}\E_\theta[\hat{g}_n(\mathbf{X})]=g(\theta),\theta\in\Theta$$
+    则称$\hat{g}_n(\mathbf{X})$是$g(\theta)$的一个\textbf{渐进无偏估计}(asymptotically unbiased estimation).
+\end{definition}
+
+无偏性要求\textbf{估计量大量使用}，根据大数定律，计算很多次$\hat{g}_n(\mathbf{X})$后，$\hat{g}_n(\mathbf{X})$的均值以概率1等于$g(\theta)$.如果只统计一次，无偏性就没有用。
+
+\begin{example}
+    设$\mathbf{X}=(X_1,\cdots,X_n)$为均值为$\mu$，方差为$\sigma^2$的总体中抽取的样本，则样本方差$S^2$是$\sigma^2$的无偏估计，因为
+    \begin{align*}
+        \E[S^2]=&\frac{1}{n-1}\left(\sum_{i=1}^n \E[X_i^2]-n\E[\bar{X}^2]\right)\\
+        =&\frac{n}{n-1}(\E[X_1^2]-\E[\bar{X}^2])\\
+        =&\frac{n}{n-1}\left[(\sigma^2+\mu^2)-\left(\frac{\sigma^2}{n}+\mu^2\right)\right]\\
+        =&\sigma^2
+    \end{align*}
+\end{example}
+
+\subsection{有效性}
+
+无偏估计量，方差越小，有效性越高：
+
+\begin{definition}[有效性]
+    设$\hat{g}_1(\mathbf{X})$和$\hat{g}_2(\mathbf{X})$是$g(\theta)$的两个不同的无偏估计量，若
+    $$\Var_\theta(\hat{g}_1(\mathbf{X}))\le \Var_\theta(\hat{g}_2(\mathbf{X}))$$
+    且至少存在一个$\theta$使严格不等号成立，则称估计量$\hat{g}_1(\mathbf{X})$比$\hat{g}_2(\mathbf{X})$\textbf{有效}。
+\end{definition}
+
+\subsection{相合性}
+
+\begin{definition}[相合性]
+    设$\hat{g}_n(\mathbf{X})=\hat{g}_n(X_1,\cdots,X_n)$是$g(\theta)$的一个估计量，如果$\hat{g}_n(\mathbf{X})$依概率收敛到$g(\theta)$，即
+    $$\lim_{n\to\infty}\mathbb{P}_\theta(|\hat{g}_n(\mathbf{X})-g(\theta)|\ge \epsilon)=0,\forall \theta\in\Theta,\forall \epsilon>0$$
+    则称$\hat{g}_n(\mathbf{X})$为$g(\theta)$的\textbf{弱相合估计}(weakly consistent estimation).
+    
+    如果$\hat{g}_n(\mathbf{X})\aee$收敛到$g(\theta)$，即
+    $$\mathbb{P}_\theta(\lim_{n\to\infty}\hat{g}_n(\mathbf{X})=g(\theta))=1,\forall \theta\in\Theta$$
+    则称$\hat{g}_n(\mathbf{X})$为$g(\theta)$的\textbf{强相合估计}(strongly consistent estimation).
+
+    如果对$r>0$，有
+    $$\lim_{n\to\infty}\E_\theta|\hat{g}_n(\mathbf{X})-g(\theta)|^r=0,\forall\theta\in\Theta$$
+    则称$\hat{g}_n(\mathbf{X})$为$g(\theta)$的\textbf{r阶矩相合估计}(consistent estimation in r'th maen).当$r=2$时称为\textbf{均方相合估计}(consistent estimation in quadratic maen)。
+\end{definition}
+
+相合性是估计量的大样本性质。
+
+强相合$\implies$弱相合；r阶矩相合$\implies$弱相合。
+
+\section{矩估计}
+
+核心思想：\textbf{样本矩估计总体矩}
+
+设$X_1,\cdots,X_n$是从总体$F$抽取的简单样本，则样本的$k$阶原点矩
+$$a_{nk}=\frac{1}{n}\sum_{i=1}^n X_i^k,\quad k=1,2,\cdots$$
+是总体$k$阶原点矩$\alpha_k=\E[X_k]$的\textbf{矩估计量}，为无偏估计；
+
+样本的$k$阶中心矩
+$$m_{nk}=\frac{1}{n}\sum_{i=1}^n (X_i-\bar{X})^k,\quad k=2,3,\cdots$$
+是总体$k$阶中心矩$\mu_k=\E[X-\E[X]]^k$的\textbf{矩估计量}，不是无偏估计，而是系统地偏低。例如$S^2=\frac{n}{n-1}m_{n2}$是$\sigma^2$的无偏估计。
+
+\begin{definition}[矩估计]
+    设$g(\theta)$可以表示为总体分布的某些矩的函数：
+    $$g(\theta)=G(\alpha_1,\cdots,\alpha_k;\mu_2,\cdots,\mu_s)$$
+    设$\mathbf{X}$是从分布族中抽取的简单样本，将矩用矩估计量代替，得
+    $$\hat{g}(\mathbf{X})=G(a_{n1},\cdots,a_{nk};m_{n2},\cdots,m_{ns})$$
+    称$\hat{g}(\mathbf{X})$是$g(\theta)$的\textbf{矩估计量}(moment estimate)，这种求矩估计量的方法称为\textbf{矩法}。
+\end{definition}
+
+\section{最大似然估计}
+
+\begin{definition}[似然函数]
+    取定$\theta$，$f(\mathbf{x},\theta)$为样本$\mathbf{X}=(X_1,\cdots,X_n)$的概率函数，固定$\mathbf{x}$，作为$\theta$的函数，称为\textbf{似然函数}(likelihood function)，记为
+    $$L(\theta,\mathbf{x})=f(\mathbf{x},\theta)$$
+    将$l(\theta,\mathbf{x})=\ln L(\theta,\mathbf{x})$称为\textbf{对数似然函数}。
+\end{definition}
+
+\begin{definition}[最大似然估计]
+    设$\mathbf{X}=(X_1,\cdots,X_n)$是从参数分布族$\mathcal{F}=\{f(\mathbf{x},\theta):\theta\in\Theta\}$中抽取的简单样本，$L(\theta,\mathbf{x})$是似然函数，若存在统计量$\hat{\theta}=\hat{\theta}(\mathbf{X})$，使得
+    $$L(\hat{\theta}(\mathbf{x}),\mathbf{x})=\max_{\theta\in\Theta}L(\theta,\mathbf{x}),\forall x\in\mathcal{X} $$
+    则称$\hat{\theta}(\mathbf{X})$是$\theta$的\textbf{最大似然估计}(maximum likelihood estimation,MLE).若待估计函数是$g(\theta)$，则定义$g(\hat{\theta})$为$g(\theta)$的MLE.
+\end{definition}
+
+很多时候寻找对数似然函数的最大值更为容易。
 
 \chapter{区间估计}
 
