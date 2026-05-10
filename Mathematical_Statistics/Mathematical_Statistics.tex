@@ -837,6 +837,66 @@ $$m_{nk}=\frac{1}{n}\sum_{i=1}^n (X_i-\bar{X})^k,\quad k=2,3,\cdots$$
 
 很多时候寻找对数似然函数的最大值更为容易。
 
+\begin{example}
+    设$\mathbf{X}=(X_1,\cdots,X_n)$是从两点分布族$\{B(1,p):0<p<1\}$中抽取的简单样本，求$p$的MLE.
+
+    似然函数为
+    $$L(p,\mathbf{x})=\prod_{i=1}^n (p^{x_i}(1-p)^{1-x_i})=p^{\sum_{i=1}^n x_i}(1-p)^{n-\sum_{i=1}^n x_i}$$
+    对数似然函数为
+    $$l(p,\mathbf{x})=\ln L(p,\mathbf{x})=\ln p\cdot \sum_{i=1}^n x_i+\ln(1-p)\cdot\left(n-\sum_{i=1}^n x_i\right)$$
+    对数似然方程为
+    $$\frac{\partial l(p,\mathbf{x})}{\partial p}=\frac{1}{p}\sum_{i=1}^n x_i-\frac{1}{1-p}\left(n-\sum_{i=1}^n x_i\right)$$
+    求解并将$x$换成$X$得估计量
+    $$\hat{p}=\frac{1}{n}\sum_{i=1}^n X_i=\bar{X}$$
+
+    当$\bar{X}\in(0,1)=\Theta$时，$p=0,1\notin\Theta$，但由于$0,1$是$\Theta$的极限点，可以补充MLE的定义并认为$p=0,1$是MLE.
+\end{example}
+
+\begin{example}
+    设$\mathbf{X}=(X_1,\cdots,X_n)$是从正态分布族$\{N(\mu,\sigma^2):\mu\in\mathbb{R},\sigma^2>0\}$中抽取的简单样本，求$(\mu,\sigma^2)$的MLE.
+
+    样本$\mathbf{X}$的分布为
+    $$f(\mathbf{x},\boldsymbol{\theta})=(2\pi\sigma^2)^{-\frac{n}{2}}\exp\left[-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2\right]$$
+    对数似然函数为
+    $$l(\boldsymbol{\theta},\mathbf{x})=-\frac{n}{2}\ln(2\pi)-n\ln\sigma-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2$$
+    对数似然方程组为
+    \begin{align*}
+        \frac{\partial l(\boldsymbol{\theta},\mathbf{x})}{\partial \mu}&=\frac{1}{\sigma^2}\sum_{i=1}^n (x_i-\mu)=0\\
+         \frac{\partial l(\boldsymbol{\theta},\mathbf{x})}{\partial \sigma^2}&=-\frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}\sum_{i=1}^n (x_i-\mu)^2=0
+    \end{align*}
+    解得
+    $$\hat{\mu}=\frac{1}{n}=\bar{X},\quad \hat{\sigma^2}=\frac{1}{n}\sum_{i=1}^n(X_i-\hat{X})^2=S_n^2$$
+    MLE未必具有无偏性。
+\end{example}
+
+\subsection{最大似然估计的性质}
+
+\begin{theorem}
+    设$\mathbf{X}=(X_1,\cdots,X_n)$是从总体$\{f(x,\theta):\theta\in\Theta\}$中抽取的简单样本，若$T=T(\mathbf{X})$是$\theta$的充分统计量，且$\theta$的最大似然估计$\hat{\theta}$唯一存在，则它必为$T$的函数。
+\end{theorem}
+\begin{proof}
+    由因子分解定理，
+    $$L(\theta,x)=g(T(\mathbf{x}),\theta)h(\mathbf{x})$$
+    记$\theta$的唯一最大似然估计为$\hat{\theta}$，则
+    $$L(\hat{\theta},\mathbf{x})=\max_{\theta\in\Theta}L(\theta,\mathbf{x})\iff g(T(\mathbf{x}),\hat{\theta})=\max_{\theta\in\Theta}g(T(\mathbf{x}),\theta)$$
+    而使$g(T(\mathbf{x}),\theta)$达到上确界的$\theta$必为$T$的函数。
+\end{proof}
+该定理表明，如果最大似然估计$\hat{\theta}$是充分统计量，则$\hat{\theta}$是极小充分统计量。
+
+\section{Bayes点估计}
+
+\subsection{定义}
+
+\begin{definition}[Bayes估计]
+    Bayes估计有三种，都可以记为$\hat{\theta}_B$：\begin{enumerate}
+        \item \textbf{最大后验概率估计}(Maximum A Posteriori, MAP)/\textbf{后验众数估计}(posterior mode estimation)/\textbf{广义最大似然估计}(广义MLE)：$$\hat{\theta}_{MD}=\arg\max_{\theta\in\Theta}\pi(\theta|\mathbf{x})$$
+        \item \textbf{后验中位数估计}(posterior median estimation)：用后验分布的中位数$\hat{\theta}_{ME}$作为$\theta$的估计量
+        \item \textbf{后验期望估计}(posterior expectation estimation)：用后验分布的期望值$\hat{\theta}_{E}$作为$\theta$的估计量
+    \end{enumerate}
+\end{definition}
+
+\subsection{精度}
+
 \chapter{区间估计}
 
 \chapter{参数假设检验}
