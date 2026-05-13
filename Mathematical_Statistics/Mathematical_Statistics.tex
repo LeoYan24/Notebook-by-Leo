@@ -38,6 +38,7 @@
 \DeclareMathOperator{\Bias}{Bias}        % 偏倚
 \DeclareMathOperator{\MSE}{MSE}          % 均方误差
 \DeclareMathOperator{\RMSE}{RMSE}        % 均方根误差
+\DeclareMathOperator{\PMSE}{PMSE}        % 后验均方误差
 \DeclareMathOperator{\SD}{SD}            % 标准差（或直接使用 \sigma）
 \DeclareMathOperator{\SE}{SE}            % 标准误
 \DeclareMathOperator{\Med}{Med}          % 中位数
@@ -895,9 +896,81 @@ $$m_{nk}=\frac{1}{n}\sum_{i=1}^n (X_i-\bar{X})^k,\quad k=2,3,\cdots$$
     \end{enumerate}
 \end{definition}
 
+当后验密度单峰对称时，上述三种Bayes估计相等；当先验分布为共轭先验时，Bayes估计的计算比较容易。
+
 \subsection{精度}
 
+经典估计中希望估计量的\textbf{均方误差}(MSE)最小，应用到Bayes估计：
+
+\begin{definition}[后验均方误差]
+    设$\theta$的后验分布为$\pi(\theta|\mathbf{x})$，Bayes估计为$\hat{\theta}_B(\mathbf{x})$，定义其\textbf{后验均方误差}(posterior mean sqare error,PMSE)为
+    $$\PMSE(\hat{\theta}_B(\mathbf{x}))=\E^{\theta|\mathbf{x}}[(\theta-\hat{\theta}_B)^2]$$
+    PMSE衡量估计精度，越小越好。
+\end{definition}
+
+特别地，采用后验期望估计时，PMSE恰取到最小值，且最小值为后验方差，即后验期望估计是PMSE最小准则下的唯一最优估计：
+$$\PMSE(\hat{\theta}_B(\mathbf{x}))=\E^{\theta|\mathbf{x}}[(\theta-\hat{\theta}_B(\mathbf{x}))]=\E^{\theta|\mathbf{x}}[(\theta-\hat{\theta}_E)+(\hat{\theta}_E-\hat{\theta}_B)]^2=\Var^\pi(\mathbf{x})+(\hat{\theta}_E-\hat{\theta}_B)^2\ge \Var^\pi(\mathbf{x})$$
+其中$\Var^\pi(\mathbf{x})$表示后验方差。
+
 \chapter{区间估计}
+
+\section{区间估计的基本概念}
+
+\subsection{参数的区间估计问题}
+
+\begin{definition}[区间估计]
+    设有参数分布族$\mathcal{F}=\{f(x,\theta):\theta\in\Theta\}$，$g(\theta)$是定义在参数空间$\Theta$上的已知函数，$\mathbf{X}=(X_1,\cdots,X_n)$是从分布族$\mathcal{F}$中抽取的简单样本，统计量$\hat{g}_1(\mathbf{X}),\hat{g}_2(\mathbf{X}):\mathcal{X}\to\Theta$满足$\hat{g}_1(\mathbf{X})\le\hat{g}_2(\mathbf{X})$，则称随机区间$[\hat{g}_1(\mathbf{X}),\hat{g}_2(\mathbf{X})]$为$g(\theta)$的一个\textbf{区间估计}(interval estimation).
+\end{definition}
+
+衡量区间估计的指标为\textbf{可靠度}与\textbf{精度}。样本大小一定，可靠性与精度不可能同时变大。通常的方案是在保证一定可靠度的前提下尽可能提高精度。随机区间的平均长度$\E_\theta(\hat{\theta}_2-\hat{\theta}_1)$是一种典型的精度指标。
+
+\subsection{置信区间}
+
+简便起见以下设$g(\theta)=\theta$.
+
+\begin{definition}[置信水平与置信系数]
+    设随机区间$[\hat{\theta}_1,\hat{\theta}_2]$为参数$\theta$的一个区间估计，称
+    $$\mathbb{P}_\theta(\hat{\theta}_1\le \theta\le \hat{\theta}_2)$$
+    为次区间估计的\textbf{置信水平}(confidence level).将置信水平在参数空间上的下确界：
+    $$\inf_{\theta\in\Theta}\mathbb{P}_\theta(\hat{\theta}_1\le \theta\le \hat{\theta}_2)$$
+    称为该区间估计的\textbf{置信系数}(confidence coeffient).
+\end{definition}
+
+置信系数给出了可靠性的下确界。
+
+\begin{definition}[置信区间]
+    设$[\hat{\theta}_1(\mathbf{X}),\hat{\theta}_2(\mathbf{X})]$是$\theta$的一个区间估计，若对于给定的$0<\alpha<1$，有
+    $$\mathbb{P}_\theta\left(\hat{\theta}_1(\mathbf{X})\le \theta\le\hat{\theta}_2(\mathbf{X})\right)\ge 1-\alpha,\quad\theta\in\Theta$$
+    则称$[\hat{\theta}_1(\mathbf{X}),\hat{\theta}_2(\mathbf{X})]$是$\theta$的\textbf{置信水平}为$1-\alpha$的\textbf{置信区间}(confidence interval)，将
+    $$\mathbb{P}_\theta\left(\hat{\theta}_1(\mathbf{X})\le \theta\le\hat{\theta}_2(\mathbf{X})\right)$$
+    称为$[\hat{\theta}_1(\mathbf{X}),\hat{\theta}_2(\mathbf{X})]$
+    的\textbf{置信系数}。
+\end{definition}
+
+\subsection{置信限}
+
+\begin{definition}[置信限]
+    设统计量$\hat{\theta}_U(\mathbf{X})$和$\hat{\theta}_L(\mathbf{X})$对给定的$0<\alpha<1$，有
+    $$\mathbb{P}_\theta(\theta\le \hat{\theta}_U(\mathbf{X}))\ge 1-\alpha,\forall\theta\in\Theta$$
+    $$\mathbb{P}_\theta(\hat{\theta}_L(\mathbf{X})\le\theta)\ge 1-\alpha,\forall\theta\in\Theta$$
+    则称$\hat{\theta}_U(\mathbf{X})$和$\hat{\theta}_L(\mathbf{X})$分别是$\theta$的置信水平为$1-\alpha$的（单侧）\textbf{置信上限}(upper confidence limit)和\textbf{置信下限}(lower confidence limit).
+    $$\inf_{\theta\in\Theta}\mathbb{P}_\theta(\theta\le \hat{\theta}_U(\mathbf{X})),\quad\inf_{\theta\in\Theta}\mathbb{P}_\theta(\hat{\theta}_L(\mathbf{X})\le\theta)$$
+    分别成为置信上、下限的置信系数。
+\end{definition}
+
+\begin{lemma}
+    设$\hat{\theta}_U(\mathbf{X})$和$\hat{\theta}_L(\mathbf{X})$分别是$\theta$的置信水平为$1-\alpha_1$和$1-\alpha_2$的单侧置信下限和置信上限，且对任何样本都有$\hat{\theta}_U(\mathbf{X})\le\hat{\theta}_L(\mathbf{X})$，则$[\hat{\theta}_U(\mathbf{X}),\hat{\theta}_L(\mathbf{X})]$是$\theta$的置信水平为$1-(\alpha_1+\alpha_2)$的双侧置信区间。
+\end{lemma}
+
+\subsection{置信域}
+
+\begin{definition}[置信域]
+    设有参数分布族$\mathcal{F}=\{f(x,\boldsymbol{\theta}):\boldsymbol{\theta}\in\boldsymbol{\Theta}\}$，参数空间$\boldsymbol{\Theta}\in\mathbb{R}^k,k\ge 2$，$\mathbf{X}=(X_1,\cdots,X_n)$是来自分布族$\mathcal{F}$的样本，若统计量$S(\mathbf{X})$满足\begin{enumerate}
+        \item $\forall\mathbf{X}\in\mathcal{X},S(\mathbf{X})\subset\boldsymbol{\Theta}$
+        \item $\forall 0<\alpha<1,\mathbb{P}_{\boldsymbol{\theta}}(\boldsymbol{\theta}\in S(\mathbf{X}))\ge 1-\alpha,\forall\boldsymbol{\theta}\in\boldsymbol{\Theta}$
+    \end{enumerate}
+    则称$S(\mathbf{X})$是$\boldsymbol{\theta}$的置信水平为$1-\alpha$的\textbf{置信域}(confidence region)或\textbf{置信集}，将$\inf_{\theta\in\Theta}\mathbb{P}_{\boldsymbol{\theta}}(\boldsymbol{\theta}\in S(\mathbf{X}))$称为置信系数。
+\end{definition}
 
 \chapter{参数假设检验}
 
