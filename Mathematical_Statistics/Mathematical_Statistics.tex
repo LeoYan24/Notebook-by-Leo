@@ -976,4 +976,112 @@ $$\PMSE(\hat{\theta}_B(\mathbf{x}))=\E^{\theta|\mathbf{x}}[(\theta-\hat{\theta}_
 
 \chapter{参数假设检验}
 
+\section{假设检验的若干基本概念}
+
+\begin{definition}[统计假设和假设检验]
+    对总体分布的某些特征所作的假设称为\textbf{统计假设}；使用样本对所作出的统计假设进行推断的方法和过程称为\textbf{假设检验}。根据总体分布的形式是否一致，假设检验问题分为两大类：\textbf{参数型假设检验}和\textbf{非参数型假设检验}
+\end{definition}
+
+\begin{definition}[原假设与备择假设]
+    设有参数分布族$\{f(x,\theta):\theta\in\Theta\}$，$X_1,\cdots,X_n$是从中抽取的简单样本，对于参数空间的子集$\Theta_0\subset\Theta$，如果我们对于$H_0:\theta\in\Theta_0$有较大的把握，就将命题$H_0:\theta\in\Theta_0$称为\textbf{零假设}(null hypothesis)或\textbf{原假设}；设$\Theta_1\subset\Theta-\Theta_0$，则命题$H_1:\theta\in\Theta_1$称为$H_0$的\textbf{备择假设}(alternative hypothesis)或\textbf{对立假设}。将上述问题写为：
+    $$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
+
+    如果$\Theta_0$或$\Theta_1$只包含一个点，则称对应假设是\textbf{简单假设}(simple hypothesis)，否则成为是\textbf{复合假设}(composite hypothesis).
+\end{definition}
+
+\begin{definition}[检验统计量，拒绝域]
+    给定检验问题
+    $$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
+    根据\textbf{检验统计量}$T(\mathbf{X})$进行判决，对于区域$D\in\mathcal{X}$，当$T(\mathbf{X})\in D$时拒绝$H_0$，反之接受$H_0$，称$D$为\textbf{拒绝域}(reject region)或\textbf{否定域}，将$\bar{D}=\mathcal{X}-D$称为\textbf{接受域}(acceptance region).
+
+    我们称法则
+    $$T:\begin{cases}
+        T(\mathbf{X})\in D&,\text{拒绝}H_0\\
+        T(\mathbf{X})\in\bar{D}&,\text{接受}H_0
+    \end{cases}$$
+    是上述检验问题的一个\textbf{检验}(test)。
+\end{definition}
+
+\begin{definition}[检验函数]
+    为便于数学上的处理，引入\textbf{检验函数}$\varphi:\mathcal{X} \to[0,1]$，它与检验$T$是一一对应的：
+    $$\varphi(\mathbf{x})=\begin{cases}
+        1,&\mathbf{x}\in D\\
+        0,&\mathbf{x}\in \bar{D}
+    \end{cases}$$
+    它表示有了样本$\mathbf{X}$后，拒绝$H_0$的概率。
+    
+    如果$\varphi(\mathbf{x})$只取值于$\{0,1\}$，称这种检验为\textbf{非随机化检验}(non-randomized test)；如果对某些样本$\mathbf{X}$有$0<\varphi(\mathbf{x})<1$，则称之为\textbf{随机化检验}(randomized text)，这种情况发生时，可以根据一个成功概率为$r$的随机试验决定是否接受，此时随机化检验函数具有以下形式：
+    $$\varphi(\mathbf{x})=\begin{cases}
+        1,&\mathbf{x}\in D\\
+        r,&\mathbf{x}\notin D\cup \bar{D}\\
+        0,&\mathbf{x}\in \bar{D}
+    \end{cases}$$
+\end{definition}
+
+\begin{definition}[功效函数]
+    假设检验问题
+    $$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
+    中可能出现的两类错误：\begin{enumerate}
+        \item 零假设$H_0$本来是对的，由于样本的随机性，观察值落入拒绝域$D$，错误地将$H_0$拒绝，称为\textbf{弃真}或\textbf{第一类错误}
+        \item 零假设$H_0$本来是错的，由于样本的随机性，观察值落入接受域$\bar{D}$，错误地将$H_0$接受，称为\textbf{取伪}或\textbf{第二类错误}
+    \end{enumerate}
+    为了计算犯两类错误的概率，引入检验函数$\varphi$的\textbf{功效函数}(power function)（或称效函数、势函数）：
+    $$\beta_\varphi(\theta)=\E_\theta[\varphi(\mathbf{X})],\quad \theta\in\Theta$$
+\end{definition}
+
+功效函数表示当参数为$\theta$时，拒绝$H_0$的概率。我们希望功效函数$\beta_\varphi(\theta)$在$\Theta_0$中尽可能小而在$\Theta_1$中尽可能大。
+
+\begin{definition}[检验水平]
+    如果检验$\varphi$犯第一类错误的概率不超过$\alpha$，即
+    $$\beta_\varphi(\theta)\le \alpha,\quad\forall\theta\in\Theta_0$$
+    则称$\alpha$是$\varphi$的一个水平，将$\varphi$称为\textbf{显著性水平}为$\alpha$的检验，简称水平为$\alpha$的检验。
+\end{definition}
+
+调整接受域时，两类错误概率必然一增大一减小。Neyman-Pearson原则：在保证第一类错误概率不超过某个小的数$\alpha$的前提下，寻找第二类错误概率较小的检验。此时$H_0$受保护，因此通常设为不能被轻易拒绝的命题。我们将这样的假设检验问题称为\textbf{显著性检验}(significant test)，其检验水平$\alpha$称为\textbf{显著性水平}。
+
+按定义，显著性水平可以取的更大，为此称一个检验的最小水平为其\textbf{真实水平}，但在造表时也将$\alpha$取为0.01，0.05等典型值。
+
+水平$\alpha$选的越小，接受原假设$H_0$的结论可靠性就越低，而拒绝原假设$H_0$的可靠性就越高。
+
+\begin{example}
+    某工厂生产一批产品要上市销售，按规定次品率$p$不得超过0.01，今在其中随机不放回抽取100件，根据样本中的次品率决定能否出厂。
+
+    选取\textbf{零假设}和\textbf{备择假设}如下：
+    $$H_0:0<p\le 0.01\leftrightarrow H_1:0.01<p<1$$
+    这两个假设都是复合假设。
+
+    定义
+    $$X_i=\begin{cases}
+        1,&\text{第i个产品为次品}\\
+        0,&\text{otherwise}
+    \end{cases}$$
+    将\textbf{检验统计量}选为$T(\mathbf{X})=\sum_{i=1}^{100} X_i$，\textbf{否定域}选为$D=\{\mathbf{X}=(X_1,\cdots,X_n):T(\mathbf{X})>c\}$，如果选取接受域为$\bar{D}=\{\mathbf{X}=(X_1,\cdots,X_n):T(\mathbf{X})\le c\}$，则为\textbf{非随机化检验}，\textbf{检验函数}为
+    $$\varphi(\mathbf{x})=\begin{cases}
+        1,&T(\mathbf{x})>c\\
+        0,&T(\mathbf{x})\le c
+    \end{cases}$$
+    也可以认为$c$为\textbf{临界值}(critical value)，因为当$T(\mathbf{x})$恰等于$c$时，厂方和买方倾向于做出相反的判断，此时可以取随机化检验函数为
+    $$\varphi(\mathbf{x})=\begin{cases}
+        1,&T(\mathbf{x})>c\\
+        0.5,&T(\mathbf{x})=c\\
+        0,&T(\mathbf{x})<c
+    \end{cases}$$
+    这样可以通过抛一枚均匀硬币来决定是否接受$H_0$.
+
+    如果总体的真实次品率$p<0.01$，但由于样本的随机性，抽样结果显示$T(\mathbf{x})>c$，则犯第一类错误；如果总体的真实次品率$p>0.01$，但由于样本的随机性，抽样结果显示$T(\mathbf{x})<c$，则犯第二类错误。
+
+    利用$T(\mathbf{X})=\sum_{i=1}^{100} X_i\sim B(n,\theta),0<\theta<1$，可知（非随机化）检验的\textbf{功效函数}为
+    \begin{align*}
+        \beta_\varphi(\theta)&=\E_\theta[\varphi(\mathbf{X})]\\
+        &=\mathbb{P}_\theta\left(\sum_{i=1}^{100}X_i>c\right)\\
+        &=\sum_{k=c+1}^{100}\binom{100}{k}\theta^k(1-\theta)^{100-k}
+    \end{align*}
+\end{example}
+
+\section{似然比检验}
+
+\chapter{非参数假设检验}
+
+\chapter{统计判决理论}
+
 \end{document}
