@@ -1080,6 +1080,28 @@ $$\PMSE(\hat{\theta}_B(\mathbf{x}))=\E^{\theta|\mathbf{x}}[(\theta-\hat{\theta}_
 
 \section{似然比检验}
 
+\begin{definition}[似然比检验]
+    设样本$\mathbf{X}$有概率函数$f(\mathbf{x},\theta),\theta\in\Theta$，$\Theta_0$为参数空间$\Theta$的真子集，考虑检验问题
+    $$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
+    则统计量
+    $$\lambda(\mathbf{x})=\frac{\sup_{\theta\in\Theta}f(\mathbf{x},\theta)}{\sup_{\theta\in\Theta_0}f(\mathbf{x},\theta)}$$
+    称为关于该检验问题的\textbf{似然比}。定义\textbf{检验函数}为
+    $$\varphi(\mathbf{x})=\begin{cases}
+        1&,\lambda(\mathbf{x})>c\\
+        r&,\lambda(\mathbf{x})=c\\
+        0&,\lambda(\mathbf{x})<c
+    \end{cases}$$
+    称之为上述检验问题的一个\textbf{似然比检验}(likelihood ratio test,LRT)，其中$c,r(0\le r\le 1)$为待定常数。
+\end{definition}
+
+参数$c,r$应使检验具有给定水平$\alpha$，这要求我们求出$\lambda(\mathbf{x})$的分布并根据$\alpha$选取参数$c,r$，但$\lambda(\mathbf{x})$的分布通常难以求得。对此我们有两种策略，一种是用$\lambda(\mathbf{x})$的极限分布近似代替，另一种使寻找统计量$T(\mathbf{x})$使得$\lambda(\mathbf{x})=g(T(\mathbf{x}))$为$T(\mathbf{x})$的严格递增（或严格递减）函数，这样，似然比检验等价于
+$$\varphi(\mathbf{x})=\begin{cases}
+        1&,T(\mathbf{x})>c'\\
+        r&,T(\mathbf{x})=c'\\
+        0&,T(\mathbf{x})<c'
+    \end{cases}$$
+因此只需要求$T(\mathbf{x})$的分布。
+
 \chapter{非参数假设检验}
 
 \chapter{统计判决理论}
