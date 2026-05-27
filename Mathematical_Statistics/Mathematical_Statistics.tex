@@ -1080,6 +1080,22 @@ $$\PMSE(\hat{\theta}_B(\mathbf{x}))=\E^{\theta|\mathbf{x}}[(\theta-\hat{\theta}_
 
 \section{似然比检验}
 
+对于检验问题
+$$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
+比较拒绝域内外的最高似然水平：
+$$L_{\Theta_0}(\mathbf{x})=\sup_{\theta\in\Theta_0}f(\mathbf{x},\theta)$$
+$$L_{\Theta_1}(\mathbf{x})=\sup_{\theta\in\Theta_1}f(\mathbf{x},\theta)$$
+考虑比值$L_{\Theta_1}(\mathbf{x})/L_{\Theta_0}(\mathbf{x})$，比值越小，说明$\theta\in\Theta_1$的似然性越小，越应当倾向于接受$H_0$.
+
+为了计算上的方便，我们注意到
+$$\begin{cases}
+    L_{\Theta_0}(\mathbf{x})>L_{\Theta_1}(\mathbf{x})&\implies L_{\Theta}(\mathbf{x})=L_{\Theta_0}(\mathbf{x})\\
+    L_{\Theta_0}(\mathbf{x})<L_{\Theta_1}(\mathbf{x})&\implies L_{\Theta}(\mathbf{x})=L_{\Theta_1}(\mathbf{x})
+\end{cases}$$
+于是
+$$\lambda(\mathbf{x})=\frac{L_{\Theta}(\mathbf{x})}{L_{\Theta_0}(\mathbf{x})}=\max\left\{\frac{L_{\Theta_1}(\mathbf{x})}{L_{\Theta_0}(\mathbf{x})},1\right\}$$
+与上述比值$L_{\Theta_1}(\mathbf{x})/L_{\Theta_0}(\mathbf{x})$同增同减，可以由此进行似然比检验：
+
 \begin{definition}[似然比检验]
     设样本$\mathbf{X}$有概率函数$f(\mathbf{x},\theta),\theta\in\Theta$，$\Theta_0$为参数空间$\Theta$的真子集，考虑检验问题
     $$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
@@ -1101,6 +1117,42 @@ $$\varphi(\mathbf{x})=\begin{cases}
         0&,T(\mathbf{x})<c'
     \end{cases}$$
 因此只需要求$T(\mathbf{x})$的分布。
+
+\section{Bayes假设检验和预测}
+
+对于检验问题
+$$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
+其中$\Theta=\Theta_0\sqcup\Theta_1$.在Bayes统计方法中，获得后验分布$\pi(\theta|\mathbf{x})$后，计算假设$H_0$和和$H_1$的后验概率$$\alpha_0=\mathbb{P}(\Theta_0|\mathbf{x}),\quad\alpha_1=\mathbb{P}(\Theta_1|\mathbf{x})$$
+当\textbf{后验机会比（后验概率比）}$\alpha_0/\alpha_1$显著小于1时接受$H_1$，显著大于1是接受$H_0$，如果约等于1则需要进一步抽样或获取先验信息。
+
+Bayes假设检验更简单，不需要选择检验统计量、确定抽样分布、检验水平，$H_0,H_1$地位平等，容易推广到多重假设检验。
+
+\subsection{Bayes因子}
+
+\begin{definition}[Bayes因子]
+    设两个假设$\Theta_0,\Theta_1$的先验概率分别为$\pi_1,\pi_2$，，后验概率分别为$\alpha_0,\alpha_1$，比例$\alpha_0/\alpha_1$称为$H_0$对$H_1$的\textbf{后验机会比}(posterior odds ratio)，$\pi_1/\pi_2$被称为\textbf{先验机会比}(prior odds ratio)，则\textbf{Bayes因子}定义为
+    $$B_{01}^\pi(\mathbf{x})=\frac{\text{后验机会比}}{\text{先验机会比}}=\frac{\alpha_0/\alpha_1}{\pi_1/\pi_2}=\frac{\alpha_0\pi_1}{\alpha_1\pi_0}$$
+    $B_{01}^\pi(\mathbf{x})\in(0,\infty)$的值越大，对$H_0$的支持程度越高。
+\end{definition}
+
+\begin{example}[简单假设情形]
+    设
+    $$H_0:\theta\in\Theta_0=\{\theta_0\}\leftrightarrow H_1:\theta\in\Theta_1=\{\theta_1\}$$
+    则
+    $$\alpha_0=\mathbb{P}(\theta_0|\mathbf{x})=\frac{f(\mathbf{x}|\theta_0)\pi_0}{f(\mathbf{x}|\theta_0)\pi_0+f(\mathbf{x}|\theta_1)\pi_1}$$
+    $$\alpha_1=\mathbb{P}(\theta_1|\mathbf{x})=\frac{f(\mathbf{x}|\theta_1)\pi_1}{f(\mathbf{x}|\theta_0)\pi_0+f(\mathbf{x}|\theta_1)\pi_1}$$
+    后验机会比为
+    $$\alpha_0/\alpha_1=\frac{\pi_0 f(\mathbf{x}|\theta_0)}{\pi_1 f(\mathbf{x}|\theta_1)}$$
+    Bayes因子为
+    $$B_{01}^\pi(\mathbf{x})=\frac{\alpha_0\pi_1}{\alpha_1\pi_0}=\frac{f(\mathbf{x}|\theta_0)}{f(\mathbf{x}|\theta_1)}$$
+    是$\Theta_0\leftrightarrow\Theta_1$的似然比，不依赖于先验分布，因此\textbf{Bayes因子可以看作是数据$\mathbf{x}$支持$\Theta_0$的程度}。
+    
+    拒绝假设$H_0$要求$\alpha_0/\alpha_1<1$，即
+    $$B_{01}^\pi(\mathbf{x})=\frac{f(\mathbf{x}|\theta_0)}{f(\mathbf{x}|\theta_1)}>\frac{\pi_0}{\pi_1}$$
+    相当于一种似然比检验。
+\end{example}
+
+在复杂假设情形下，$B_{01}^\pi(\mathbf{x})$是加权似然比，与$\Theta_0,\Theta_1$上的先验概率密度$g_0,g_1$有关，只能部分消除先验分布的影响。
 
 \chapter{非参数假设检验}
 
