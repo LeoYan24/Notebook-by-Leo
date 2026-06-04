@@ -986,7 +986,7 @@ $$\PMSE(\hat{\theta}_B(\mathbf{x}))=\E^{\theta|\mathbf{x}}[(\theta-\hat{\theta}_
     设有参数分布族$\{f(x,\theta):\theta\in\Theta\}$，$X_1,\cdots,X_n$是从中抽取的简单样本，对于参数空间的子集$\Theta_0\subset\Theta$，如果我们对于$H_0:\theta\in\Theta_0$有较大的把握，就将命题$H_0:\theta\in\Theta_0$称为\textbf{零假设}(null hypothesis)或\textbf{原假设}；设$\Theta_1\subset\Theta-\Theta_0$，则命题$H_1:\theta\in\Theta_1$称为$H_0$的\textbf{备择假设}(alternative hypothesis)或\textbf{对立假设}。将上述问题写为：
     $$H_0:\theta\in\Theta_0\leftrightarrow H_1:\theta\in\Theta_1$$
 
-    如果$\Theta_0$或$\Theta_1$只包含一个点，则称对应假设是\textbf{简单假设}(simple hypothesis)，否则成为是\textbf{复合假设}(composite hypothesis).
+    如果$\Theta_0$或$\Theta_1$只包含一个点，则称对应假设是\textbf{简单假设}(simple hypothesis)，否则称为是\textbf{复合假设}(composite hypothesis).
 \end{definition}
 
 \begin{definition}[检验统计量，拒绝域]
@@ -1185,6 +1185,71 @@ $$g(z|\theta)\pi(\theta|\mathbf{x})$$
 
 \chapter{非参数假设检验}
 
+\section{符号检验和符号秩和检验}
+
+\subsection{符号检验法}
+
+\begin{example}
+    为比较甲乙两种酒的优劣，请$N$个人品尝并给出对两种酒的评分，分别记为$X_i,Y_i,i=1,\cdots,N$.记$Z_i=X_i-Y_i$.
+
+    如果假定$Z_i\sim N(\mu,\sigma^2)$，则原问题转化为参数假设检验：
+    $$H_0:\mu=0\leftrightarrow H_1:\mu\neq 0$$
+
+    如果不能假定$Z_i$服从正态分布，则可以对每个人的评分给出一个符号
+    $$S_i=\begin{cases}
+        +,&\ Z_i>0\\
+        -,&\ Z_i<0\\
+        0,&\ Z_i=0
+    \end{cases}$$
+    非参数假设检验问题
+    $$H_1:\text{甲乙两种酒一样好}\leftrightarrow H_2:\text{甲乙两种酒不一样}$$
+    基于符号$S_1,\cdots,S_N$，故称为\textbf{符号检验}(sign test).
+\end{example}
+
+符号检验实际上是二项分布参数检验的一个特例。记$+,-$的数量分别为$n_+,n_-$，有
+$$n_+ +n_- =n,\quad n_+\sim B(n,\theta)$$
+上述检验问题转化为
+$$H_1:\theta=\frac{1}{2}\leftrightarrow H_2:\theta\neq\frac{1}{2}$$
+
+\subsection{符号秩和检验}
+
+\begin{definition}
+    设$X_1,\cdots,X_n$为两两不相等的一组样本，将其按大小排列为
+    $X_{(1)}<\cdots<X_{(n)}$，称第$R_i$小的样本$X_i$在样本$(X_1,\cdots,X_n)$的\textbf{秩}为$R_i$，即$X_i=X_{(R_i)}$.
+\end{definition}
+
+\begin{definition}
+    设$X_1,\cdots,X_n$为来自单个总体的样本，或来自多个总体样本的合样本，则$\mathbf{R}=(R_1,\cdots,R_n)$称为$(X_1,\cdots,X_n)$的\textbf{秩统计量}(rank statistics)，其中$R_i$为$X_i$的秩。
+
+    由$\mathbf{R}$导出的统计量也称为秩统计量。基于秩统计量的检验方法统称为\textbf{秩检验}(rank test)。
+\end{definition}
+
 \chapter{统计判决理论}
+
+\section{基本概念}
+
+\subsection{统计判决三要素，Bayes统计判决第四要素}
+
+如果做出决策时所依据的事实中至少有一部分时受到随机性影响的观察值，则可称之为统计判决问题。
+
+\subsubsection{样本空间和样本分布族}
+
+样本空间$\mathcal{X}$；取值于$\mathcal{X}$的随机变量$X$及其分布族$\{f(x|\theta),\theta\in\Theta\}$.其中$\theta$为未知参数。
+
+\subsubsection{行动空间}
+
+决策者对某个统计判决问题可能采取的行动所构成的非空集合称为\textbf{行动空间}(action space)，记为$\mathcal{A}$.
+
+例如，在估计问题中，$\mathcal{A}=\Theta$；在检验问题中，$\mathcal{A}=\{\text{接受原假设}H_0,\text{拒绝原假设}H_0\}$.
+
+\subsubsection{损失函数}
+
+\textbf{损失函数}(loss function)是定义于$\mathcal{A}\times \Theta$上的非负函数$L(a,\theta)$，表示参数为$\theta$时，采取行动$a\in\mathcal{A}$所承受的损失。
+
+\subsubsection{先验分布}
+
+定义在参数空间$\Theta$上的先验分布$\pi(\theta)$
+
+统计判决问题研究如何根据样本$\mathbf{x}$的值恰当选取行动$a$使得按样本分布或后验分布计算的平均损失最小。
 
 \end{document}
