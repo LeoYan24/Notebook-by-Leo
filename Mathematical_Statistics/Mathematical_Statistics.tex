@@ -1252,4 +1252,88 @@ $$H_1:\theta=\frac{1}{2}\leftrightarrow H_2:\theta\neq\frac{1}{2}$$
 
 统计判决问题研究如何根据样本$\mathbf{x}$的值恰当选取行动$a$使得按样本分布或后验分布计算的平均损失最小。
 
+\subsection{统计判决理论的一些基本概念}
+
+\begin{definition}[决策函数]
+    函数$\delta:\mathcal{X}\to\mathcal{A}$称为\textbf{决策函数}(decision function)或\textbf{判决函数}，表示根据样本$\mathbf{x}$采取的行动$\delta=\delta(\mathbf{x})\in\mathcal{A}$。
+\end{definition}
+
+采取行动$\delta$时的损失依赖于参数$\theta$，因此可以将该行动造成的损失描述为函数$L(\delta,\theta)$，使用取定参数$\theta$时的统计平均作为$\delta$的衡量标准，就引入以下风险函数的概念：
+
+\begin{definition}[风险函数]
+    设$\delta$是一个决策函数，称平均损失
+    $$R(\delta,\theta)=\E^{\mathbf{X}|\theta}[L(\delta(\mathbf{X}),\theta)]=\int_{\mathcal{X}}L(\delta(\mathbf{x}),\theta)f(\mathbf{x}|\theta)\,d\mathbf{x}$$
+    为$\delta$的\textbf{风险函数}(risk funtion).
+\end{definition}
+
+A.Wald：评价一个决策函数的唯一依据就是其风险函数，风险函数越小越好，即：
+
+\begin{definition}[一致最优决策函数]
+    记$R(\delta,\theta)$是决策函数$\delta$的风险函数，若存在一个决策函数$\delta^*$，使得$\forall \delta$有
+    $$R(\delta^*,\theta)\le R(\delta,\theta),\forall\theta\in\Theta$$
+    则称$\delta^*$为\textbf{一致最优解}或\textbf{一致最优决策函数}。
+\end{definition}
+
+通常较难找到一致最优决策函数，此时可以制定另外的优良性准则，或者对决策函数提出合理要求，缩小所考虑的决策函数的范围。
+
+\subsection{Bayes统计判决的一些基本概念}
+
+Bayes准则下的决策函数优良性通过风险函数对参数的先验分布的统计平均来衡量：
+
+\begin{definition}[Bayes风险]
+    设$R(\delta,\theta)$是决策函数$\delta$的风险函数，$\pi(\theta)$为$\theta$的先验分布，则称
+    $$R_\pi(\delta)=\E^\theta[R(\delta,\theta)]=\begin{cases}
+        \int_{\Theta}R(\delta,\theta)\pi(\theta)\,d\theta,&\text{当}\theta\text{为连续型随机变量}\\
+        \sum_{i}R(\delta,\theta_i)\pi(\theta_i),&\text{当}\theta\text{为离散型随机变量}
+    \end{cases}$$
+    为$\delta$的\textbf{Bayes风险}(Bayes risk).
+\end{definition}
+
+希望最小化Bayes风险：
+
+\begin{definition}[Bayes解]
+    设$\delta_1$和$\delta_2$分别为$\theta$的两个决策函数，若$R_\pi(\delta_1)\le R_\pi(\delta_2)$，则称$\delta_1$在Bayes风险的意义下优于$\delta_2$。
+
+    在Bayes风险的意义下的最优决策函数$\delta^*$满足
+    $$R_\pi(\delta^*)\le R_\pi(\delta),\forall \delta$$
+    称$\delta^*$为该统计判决问题的\textbf{Bayes解}。
+\end{definition}
+
+如果将前面讨论的先验分布改成后验分布，我们可以得到一套类似的理论：
+
+\begin{definition}[后验风险]
+    设$\pi(\theta|\mathbf{x})$为$\theta$的后验分布，$L(\delta,\theta)$为损失函数，则称
+    $$R(\delta|\mathbf{x})=\E^{\theta|\mathbf{x}}[R(\delta,\theta)]=\begin{cases}
+        \int_{\Theta}R(\delta(\mathbf{x}),\theta)\pi(\theta|\mathbf{x})\,d\theta,&\text{当}\theta\text{为连续型随机变量}\\
+        \sum_{i}R(\delta(\mathbf{x}),\theta_i)\pi(\theta_i|\mathbf{x}),&\text{当}\theta\text{为离散型随机变量}
+    \end{cases}$$
+\end{definition}
+
+\begin{definition}[最优Bayes决策函数]
+    若存在决策函数$\delta^*$，使得
+    $$R(\delta^*|\mathbf{x})=\min_\delta R(\delta|\mathbf{x})$$
+    则称$\delta^*$为\textbf{在后验风险最小准则下最优的Bayes决策函数}。
+\end{definition}
+
+\begin{proposition}
+    后验风险与Bayes风险的关系如下：
+    $$R_\pi(\delta)=\E^{\mathbf{X}}[R(\delta|\mathbf{X})]$$
+\end{proposition}
+\begin{proof}
+    利用
+    $$f(\mathbf{x},\theta)=f(\mathbf{x}|\theta)\pi(\theta)=\pi(\theta|\mathbf{x})m(\mathbf{x})$$
+    （其中$m(\mathbf{x})$为$\mathbf{x}$的边缘分布），我们有
+    \begin{align*}
+        R_\pi(\delta)=&\E^\theta[R(\delta,\theta)]=\int_{\Theta}R(\delta,\theta)\pi(\theta)\,d\theta\\
+        =&\int_{\Theta}\left[\int_{\mathcal{X}}L(\delta,\theta)f(\mathbf{x}|\theta)\,d\mathbf{x}\right]\pi(\theta)\,\theta\\
+        =&\int_{\mathcal{X}}\left[\int_{\Theta}L(\delta,\theta)\,d\theta\right]m(\mathbf{x})\,d\mathbf{x}\\
+        =&\int_{\mathcal{X}}R(\delta|\mathbf{x})m(\mathbf{x})\,d\mathbf{x}\\
+        =&m(\mathbf{x})
+    \end{align*}
+\end{proof}
+
+总之，Bayes风险
+$$R(\delta|\mathbf{x})=\E^{\theta|\mathbf{x}}[R(\delta,\theta)]=\E^{\mathbf{X}}[R(\delta|\mathbf{X})]$$
+这表明它即可以看作风险函数关于$\theta$的先验分布的平均，也可看作后验风险关于$\mathbf{X}$的边缘分布的平均。
+
 \end{document}
