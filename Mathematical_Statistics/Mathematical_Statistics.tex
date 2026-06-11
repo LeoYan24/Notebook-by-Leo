@@ -1336,4 +1336,19 @@ Bayes准则下的决策函数优良性通过风险函数对参数的先验分布
 $$R(\delta|\mathbf{x})=\E^{\theta|\mathbf{x}}[R(\delta,\theta)]=\E^{\mathbf{X}}[R(\delta|\mathbf{X})]$$
 这表明它即可以看作风险函数关于$\theta$的先验分布的平均，也可看作后验风险关于$\mathbf{X}$的边缘分布的平均。
 
+最优Bayes决策函数同时也是Bayes解：
+\begin{theorem}
+    $\forall \mathbf{x}$，若存在决策函数$\delta^*$，满足
+    $$R(\delta^*|\mathbf{x})=\inf_{\delta\in\mathcal{A}}R(\delta|\mathbf{x})$$
+    则$\delta^*$为先验分布$\pi(\theta)$下的Bayes解。
+\end{theorem}
+\begin{proof}
+    $\forall\delta$，已知
+    $$R(\delta|\mathbf{x})\ge R(\delta^*|\mathbf{x}),\forall\mathbf{x}\in\mathcal{X}$$
+    关于$\mathbf{X}$的分布求平均，得
+    $$R_{\pi}(\delta)\ge R_\pi(\delta^*)$$
+\end{proof}
+
+可见这两种最优决策函数相同。但是后者往往更容易求得。
+
 \end{document}
